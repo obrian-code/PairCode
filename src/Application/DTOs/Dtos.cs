@@ -14,8 +14,6 @@ public record ChangePasswordDto(string CurrentPassword, string NewPassword);
 
 public record CreateRoomDto(string Name);
 
-public record UpdateRoomDto(string Name);
-
 public record RoomDto(Guid Id, string Name, string AccessCode, string Status, DateTime CreatedAt, Guid CreatedBy, int ParticipantCount);
 
 public record JoinRoomDto(string AccessCode);

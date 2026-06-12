@@ -51,17 +51,6 @@ public class RoomService
         return dtos;
     }
 
-    public async Task UpdateRoomAsync(Guid id, UpdateRoomDto dto, Guid userId)
-    {
-        var room = await _roomRepository.GetByIdAsync(id)
-            ?? throw new InvalidOperationException("Room not found");
-
-        RequireOwnership(room, userId);
-        room.UpdateName(dto.Name);
-        await _roomRepository.UpdateAsync(room);
-        await _auditService.LogAsync(userId, "UpdateRoom", nameof(Room), id.ToString(), "Room updated");
-    }
-
     public async Task DeleteRoomAsync(Guid id, Guid userId)
     {
         var room = await _roomRepository.GetByIdAsync(id)
