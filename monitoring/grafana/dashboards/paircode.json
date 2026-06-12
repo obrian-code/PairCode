@@ -1,0 +1,52 @@
+{
+  "title": "PairCode",
+  "uid": "paircode",
+  "tags": ["paircode"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "title": "Request Rate",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(http_requests_total[5m])",
+          "legendFormat": "{{method}} {{route}}"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 8, "h": 8 }
+    },
+    {
+      "title": "Error Rate (5xx)",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{status=~\"5..\"}[5m])",
+          "legendFormat": "errors"
+        }
+      ],
+      "gridPos": { "x": 8, "y": 0, "w": 8, "h": 8 }
+    },
+    {
+      "title": "Memory Usage",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes / 1024 / 1024",
+          "legendFormat": "MB"
+        }
+      ],
+      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 8 }
+    },
+    {
+      "title": "Health Check Status",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "up{job=\"paircode\"}",
+          "legendFormat": "up"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 8, "w": 4, "h": 6 }
+    }
+  ]
+}

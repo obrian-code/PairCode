@@ -28,7 +28,10 @@ try
         .Enrich.FromLogContext()
         .WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter()));
 
-    builder.Services.AddControllersWithViews();
+    builder.Services.AddControllersWithViews(options =>
+    {
+        options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+    });
 
     builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

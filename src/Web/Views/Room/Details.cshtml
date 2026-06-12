@@ -29,18 +29,23 @@
         {
             <div class="mb-3 d-flex gap-2 flex-wrap">
                 <form asp-action="Open" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-success btn-sm">Open Room</button>
                 </form>
                 <form asp-action="Close" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-warning btn-sm">Close Room</button>
                 </form>
                 <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Cancel this room?">Cancel Room</button>
                 </form>
                 <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Delete this room permanently?">Delete Room</button>
                 </form>
                 <form asp-action="Leave" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-secondary btn-sm">Leave Room</button>
                 </form>
             </div>

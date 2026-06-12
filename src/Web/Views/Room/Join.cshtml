@@ -14,6 +14,7 @@
         <h2>Join Room</h2>
         <hr>
         <form method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 <label asp-for="AccessCode" class="form-label">Access Code</label>

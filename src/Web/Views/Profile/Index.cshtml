@@ -35,6 +35,7 @@
         <hr>
         <h4>Update Name</h4>
         <form asp-controller="Profile" asp-action="Update" method="post" class="mb-4">
+            @Html.AntiForgeryToken()
             <div class="input-group mb-3">
                 <input name="name" class="form-control" value="@Model.Name" required />
                 <button type="submit" class="btn btn-primary">Update</button>
@@ -44,6 +45,7 @@
         <hr>
         <h4>Change Password</h4>
         <form asp-controller="Profile" asp-action="ChangePassword" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
             <div class="mb-3">
                 <label for="CurrentPassword" class="form-label">Current Password</label>
