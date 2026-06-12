@@ -116,7 +116,11 @@ try
         .ConfigureResource(r => r.AddService("PairCode"))
         .WithTracing(t => t
             .AddAspNetCoreInstrumentation()
-            .AddConsoleExporter());
+            .AddConsoleExporter()
+            .AddOtlpExporter(options =>
+            {
+                options.Endpoint = new Uri(builder.Configuration["OpenTelemetry:Endpoint"] ?? "http://localhost:4317");
+            }));
 
     var app = builder.Build();
 

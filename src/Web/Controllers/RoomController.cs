@@ -40,7 +40,7 @@ public class RoomController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateRoomDto dto)
+    public async Task<IActionResult> Create([FromForm] CreateRoomDto dto)
     {
         var result = await _createRoomValidator.ValidateAsync(dto);
 
@@ -115,7 +115,7 @@ public class RoomController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Join(JoinRoomDto dto)
+    public async Task<IActionResult> Join([FromForm] JoinRoomDto dto)
     {
         var result = await _joinRoomValidator.ValidateAsync(dto);
 

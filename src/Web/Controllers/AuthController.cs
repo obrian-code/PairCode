@@ -29,7 +29,7 @@ public class AuthController : Controller
 
     [HttpPost]
     [EnableRateLimiting("Login")]
-    public async Task<IActionResult> Login(LoginDto dto)
+    public async Task<IActionResult> Login([FromForm] LoginDto dto)
     {
         try
         {
@@ -60,7 +60,7 @@ public class AuthController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterUserDto dto)
+    public async Task<IActionResult> Register([FromForm] RegisterUserDto dto)
     {
         var result = await _registerValidator.ValidateAsync(dto);
 
