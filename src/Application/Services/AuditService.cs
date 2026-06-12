@@ -1,3 +1,4 @@
+using PairCode.Application.DTOs;
 using PairCode.Application.Interfaces;
 using PairCode.Domain.Entities;
 
@@ -26,5 +27,3 @@ public class AuditService : IAuditService
         ));
     }
 }
-
-public record AuditLogDto(Guid Id, Guid UserId, string UserName, string Action, string EntityName, string EntityId, string Details, DateTime Timestamp);
