@@ -2,9 +2,9 @@ services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: paircode
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-paircode}
     ports:
       - "5432:5432"
     volumes:
@@ -27,11 +27,11 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=paircode;Username=postgres;Password=postgres"
-      ASPNETCORE_ENVIRONMENT: "Development"
-      Jwt__Key: "SuperSecretKeyForPairCodeAppThatIs32CharsLong"
-      Jwt__Issuer: "PairCode"
-      Jwt__Audience: "PairCodeApp"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-paircode};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}"
+      ASPNETCORE_ENVIRONMENT: "${ASPNETCORE_ENVIRONMENT:-Development}"
+      Jwt__Key: "${JWT_KEY:-SuperSecretKeyForPairCodeAppThatIs32CharsLong}"
+      Jwt__Issuer: "${JWT_ISSUER:-PairCode}"
+      Jwt__Audience: "${JWT_AUDIENCE:-PairCodeApp}"
     networks:
       - paircode-net
 
@@ -55,8 +55,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
       GF_INSTALL_PLUGINS: ""
     volumes:
       - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
