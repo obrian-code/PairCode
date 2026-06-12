@@ -22,6 +22,9 @@ public class SharedDocumentConfiguration : IEntityTypeConfiguration<SharedDocume
         builder.Property(x => x.UpdatedAt)
             .IsRequired();
 
+        builder.Property(x => x.RowVersion)
+            .IsRowVersion();
+
         builder.HasOne(x => x.Room)
             .WithMany()
             .HasForeignKey(x => x.RoomId)

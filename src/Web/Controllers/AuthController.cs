@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using PairCode.Application.DTOs;
 using PairCode.Application.Services;
 using PairCode.Application.Validators;
@@ -27,6 +28,7 @@ public class AuthController : Controller
     }
 
     [HttpPost]
+    [EnableRateLimiting("Login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
         try
@@ -66,6 +68,12 @@ public class AuthController : Controller
         {
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.ErrorMessage);
+            return View(dto);
+        }
+
+        if (dto.Role == "Admin" && !(User.Identity?.IsAuthenticated == true && User.IsInRole("Admin")))
+        {
+            ModelState.AddModelError("", "You are not authorized to create an Admin account");
             return View(dto);
         }
 

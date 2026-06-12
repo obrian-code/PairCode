@@ -1,5 +1,7 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PairCode.Application.Interfaces;
@@ -10,6 +12,7 @@ using PairCode.Infrastructure.Services;
 using PairCode.Application.Validators;
 using PairCode.Web.Hubs;
 using PairCode.Web.Middleware;
+using PairCode.Web.Services;
 using Prometheus;
 using Serilog;
 using OpenTelemetry.Resources;
@@ -68,6 +71,7 @@ try
     builder.Services.AddAuthorization();
 
     builder.Services.AddSignalR();
+    builder.Services.AddSingleton<ConnectionTracker>();
 
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IRoomRepository, RoomRepository>();
@@ -84,6 +88,19 @@ try
     builder.Services.AddScoped<ChatService>();
     builder.Services.AddScoped<SharedDocumentService>();
     builder.Services.AddScoped<DashboardService>();
+
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+        options.AddFixedWindowLimiter("Login", cfg =>
+        {
+            cfg.PermitLimit = 10;
+            cfg.Window = TimeSpan.FromMinutes(1);
+            cfg.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+            cfg.QueueLimit = 0;
+        });
+    });
 
     builder.Services.AddScoped<RegisterUserValidator>();
     builder.Services.AddScoped<CreateRoomValidator>();
@@ -119,6 +136,7 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseRateLimiter();
 
     app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
     {

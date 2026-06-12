@@ -7,6 +7,7 @@ public class SharedDocument
     public string Content { get; private set; } = null!;
     public int Version { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+    public byte[] RowVersion { get; private set; } = [];
 
     public Room Room { get; private set; } = null!;
 

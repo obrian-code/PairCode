@@ -30,7 +30,10 @@
                 <select asp-for="Role" class="form-select">
                     <option value="Interviewer">Interviewer</option>
                     <option value="Candidate">Candidate</option>
-                    <option value="Admin">Admin</option>
+                    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+                    {
+                        <option value="Admin">Admin</option>
+                    }
                 </select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
