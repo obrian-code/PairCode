@@ -8,17 +8,20 @@ public class ChatService
 {
     private readonly IChatMessageRepository _messageRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ChatService(IChatMessageRepository messageRepository, IUserRepository userRepository)
+    public ChatService(IChatMessageRepository messageRepository, IUserRepository userRepository, IUnitOfWork unitOfWork)
     {
         _messageRepository = messageRepository;
         _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<ChatMessageDto> SendMessageAsync(Guid roomId, Guid userId, string message)
     {
         var chatMessage = new ChatMessage(roomId, userId, message);
         await _messageRepository.AddAsync(chatMessage);
+        await _unitOfWork.SaveChangesAsync();
 
         var user = chatMessage.User ?? await _userRepository.GetByIdAsync(userId);
 

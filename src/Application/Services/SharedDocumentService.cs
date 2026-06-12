@@ -8,11 +8,13 @@ public class SharedDocumentService
 {
     private readonly ISharedDocumentRepository _documentRepository;
     private readonly IAuditService _auditService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public SharedDocumentService(ISharedDocumentRepository documentRepository, IAuditService auditService)
+    public SharedDocumentService(ISharedDocumentRepository documentRepository, IAuditService auditService, IUnitOfWork unitOfWork)
     {
         _documentRepository = documentRepository;
         _auditService = auditService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<SharedDocumentDto> GetDocumentAsync(Guid roomId)
@@ -22,6 +24,7 @@ public class SharedDocumentService
         {
             doc = new SharedDocument(roomId);
             await _documentRepository.AddAsync(doc);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         return new SharedDocumentDto(doc.Content, doc.Version, doc.UpdatedAt);
@@ -39,6 +42,7 @@ public class SharedDocumentService
         doc.UpdateContent(content);
         await _documentRepository.UpdateAsync(doc);
         await _auditService.LogAsync(userId, "UpdateDocument", nameof(SharedDocument), doc.Id.ToString(), $"Document updated to version {doc.Version}");
+        await _unitOfWork.SaveChangesAsync();
 
         return new SharedDocumentDto(doc.Content, doc.Version, doc.UpdatedAt);
     }

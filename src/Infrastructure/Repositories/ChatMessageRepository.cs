@@ -28,11 +28,10 @@ public class ChatMessageRepository : IChatMessageRepository
             .Take(count)
             .ToListAsync();
 
-    public async Task<ChatMessage> AddAsync(ChatMessage message)
+    public Task<ChatMessage> AddAsync(ChatMessage message)
     {
         _context.ChatMessages.Add(message);
-        await _context.SaveChangesAsync();
-        return message;
+        return Task.FromResult(message);
     }
 
     public async Task<int> GetTotalMessagesCountAsync() =>

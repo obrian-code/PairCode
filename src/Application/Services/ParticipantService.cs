@@ -9,15 +9,18 @@ public class ParticipantService
     private readonly IParticipantRepository _participantRepository;
     private readonly IUserRepository _userRepository;
     private readonly IAuditService _auditService;
+    private readonly IUnitOfWork _unitOfWork;
 
     public ParticipantService(
         IParticipantRepository participantRepository,
         IUserRepository userRepository,
-        IAuditService auditService)
+        IAuditService auditService,
+        IUnitOfWork unitOfWork)
     {
         _participantRepository = participantRepository;
         _userRepository = userRepository;
         _auditService = auditService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<ParticipantDto>> GetRoomParticipantsAsync(Guid roomId)
@@ -40,6 +43,7 @@ public class ParticipantService
         participant.MarkLeft();
         await _participantRepository.UpdateAsync(participant);
         await _auditService.LogAsync(userId, "LeaveRoom", nameof(Room), roomId.ToString(), "User left room");
+        await _unitOfWork.SaveChangesAsync();
     }
 
     private ParticipantDto MapToDto(Participant participant)

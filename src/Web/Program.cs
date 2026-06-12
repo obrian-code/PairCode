@@ -79,6 +79,7 @@ try
     builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
     builder.Services.AddScoped<ISharedDocumentRepository, SharedDocumentRepository>();
     builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddScoped<IAuditService, AuditService>();
 

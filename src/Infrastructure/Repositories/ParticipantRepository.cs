@@ -29,17 +29,16 @@ public class ParticipantRepository : IParticipantRepository
         await _context.Participants
             .FirstOrDefaultAsync(p => p.RoomId == roomId && p.UserId == userId && p.LeftAt == null);
 
-    public async Task<Participant> AddAsync(Participant participant)
+    public Task<Participant> AddAsync(Participant participant)
     {
         _context.Participants.Add(participant);
-        await _context.SaveChangesAsync();
-        return participant;
+        return Task.FromResult(participant);
     }
 
-    public async Task UpdateAsync(Participant participant)
+    public Task UpdateAsync(Participant participant)
     {
         _context.Participants.Update(participant);
-        await _context.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
     public async Task<int> GetActiveParticipantsCountAsync() =>

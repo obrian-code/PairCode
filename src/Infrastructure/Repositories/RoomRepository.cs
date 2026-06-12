@@ -30,22 +30,21 @@ public class RoomRepository : IRoomRepository
     public async Task<IEnumerable<Room>> GetFinishedRoomsAsync() =>
         await _context.Rooms.Where(r => r.Status == RoomStatus.Finished).ToListAsync();
 
-    public async Task<Room> AddAsync(Room room)
+    public Task<Room> AddAsync(Room room)
     {
         _context.Rooms.Add(room);
-        await _context.SaveChangesAsync();
-        return room;
+        return Task.FromResult(room);
     }
 
-    public async Task UpdateAsync(Room room)
+    public Task UpdateAsync(Room room)
     {
         _context.Rooms.Update(room);
-        await _context.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(Room room)
+    public Task DeleteAsync(Room room)
     {
         _context.Rooms.Remove(room);
-        await _context.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 }

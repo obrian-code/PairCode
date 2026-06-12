@@ -7,16 +7,19 @@ namespace PairCode.Application.Services;
 public class AuditService : IAuditService
 {
     private readonly IAuditLogRepository _auditLogRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AuditService(IAuditLogRepository auditLogRepository)
+    public AuditService(IAuditLogRepository auditLogRepository, IUnitOfWork unitOfWork)
     {
         _auditLogRepository = auditLogRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task LogAsync(Guid userId, string action, string entityName, string entityId, string details)
     {
         var auditLog = new AuditLog(userId, action, entityName, entityId, details);
         await _auditLogRepository.AddAsync(auditLog);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<AuditLogDto>> GetAllLogsAsync()

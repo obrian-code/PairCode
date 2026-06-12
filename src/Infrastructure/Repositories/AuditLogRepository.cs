@@ -14,11 +14,10 @@ public class AuditLogRepository : IAuditLogRepository
         _context = context;
     }
 
-    public async Task<AuditLog> AddAsync(AuditLog auditLog)
+    public Task<AuditLog> AddAsync(AuditLog auditLog)
     {
         _context.AuditLogs.Add(auditLog);
-        await _context.SaveChangesAsync();
-        return auditLog;
+        return Task.FromResult(auditLog);
     }
 
     public async Task<IEnumerable<AuditLog>> GetAllAsync() =>

@@ -17,16 +17,15 @@ public class SharedDocumentRepository : ISharedDocumentRepository
     public async Task<SharedDocument?> GetByRoomIdAsync(Guid roomId) =>
         await _context.SharedDocuments.FirstOrDefaultAsync(d => d.RoomId == roomId);
 
-    public async Task<SharedDocument> AddAsync(SharedDocument document)
+    public Task<SharedDocument> AddAsync(SharedDocument document)
     {
         _context.SharedDocuments.Add(document);
-        await _context.SaveChangesAsync();
-        return document;
+        return Task.FromResult(document);
     }
 
-    public async Task UpdateAsync(SharedDocument document)
+    public Task UpdateAsync(SharedDocument document)
     {
         _context.SharedDocuments.Update(document);
-        await _context.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 }
