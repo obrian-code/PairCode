@@ -24,7 +24,7 @@ public class UserService
     {
         var existing = await _userRepository.GetByEmailAsync(dto.Email);
         if (existing != null)
-            throw new InvalidOperationException("Email already registered");
+            throw new InvalidOperationException("Registration failed");
 
         var role = dto.Role switch
         {
