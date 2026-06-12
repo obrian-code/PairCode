@@ -56,6 +56,7 @@ public class RoomService
         var room = await _roomRepository.GetByIdAsync(id)
             ?? throw new InvalidOperationException("Room not found");
 
+        RequireOwnership(room, userId);
         room.UpdateName(dto.Name);
         await _roomRepository.UpdateAsync(room);
         await _auditService.LogAsync(userId, "UpdateRoom", nameof(Room), id.ToString(), "Room updated");
@@ -66,6 +67,7 @@ public class RoomService
         var room = await _roomRepository.GetByIdAsync(id)
             ?? throw new InvalidOperationException("Room not found");
 
+        RequireOwnership(room, userId);
         await _roomRepository.DeleteAsync(room);
         await _auditService.LogAsync(userId, "DeleteRoom", nameof(Room), id.ToString(), "Room deleted");
     }
@@ -75,6 +77,7 @@ public class RoomService
         var room = await _roomRepository.GetByIdAsync(id)
             ?? throw new InvalidOperationException("Room not found");
 
+        RequireOwnership(room, userId);
         room.Open();
         await _roomRepository.UpdateAsync(room);
         await _auditService.LogAsync(userId, "OpenRoom", nameof(Room), id.ToString(), "Room opened");
@@ -85,6 +88,7 @@ public class RoomService
         var room = await _roomRepository.GetByIdAsync(id)
             ?? throw new InvalidOperationException("Room not found");
 
+        RequireOwnership(room, userId);
         room.Close();
         await _roomRepository.UpdateAsync(room);
         await _auditService.LogAsync(userId, "CloseRoom", nameof(Room), id.ToString(), "Room closed");
@@ -95,9 +99,16 @@ public class RoomService
         var room = await _roomRepository.GetByIdAsync(id)
             ?? throw new InvalidOperationException("Room not found");
 
+        RequireOwnership(room, userId);
         room.Cancel();
         await _roomRepository.UpdateAsync(room);
         await _auditService.LogAsync(userId, "CancelRoom", nameof(Room), id.ToString(), "Room cancelled");
+    }
+
+    private static void RequireOwnership(Room room, Guid userId)
+    {
+        if (room.CreatedBy != userId)
+            throw new UnauthorizedAccessException("Only the room creator can perform this action");
     }
 
     public async Task<RoomDto> JoinRoomByCodeAsync(string accessCode, Guid userId)
