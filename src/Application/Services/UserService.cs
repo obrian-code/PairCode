@@ -78,8 +78,17 @@ public class UserService
         if (!VerifyBCryptPassword(dto.CurrentPassword, user.PasswordHash))
             throw new UnauthorizedAccessException("Current password is incorrect");
 
-        if (dto.NewPassword.Length < 6)
-            throw new InvalidOperationException("New password must be at least 6 characters");
+        if (dto.NewPassword.Length < 8)
+            throw new InvalidOperationException("New password must be at least 8 characters");
+
+        if (!dto.NewPassword.Any(char.IsUpper))
+            throw new InvalidOperationException("New password must contain at least one uppercase letter");
+
+        if (!dto.NewPassword.Any(char.IsDigit))
+            throw new InvalidOperationException("New password must contain at least one digit");
+
+        if (!dto.NewPassword.Any(c => !char.IsLetterOrDigit(c)))
+            throw new InvalidOperationException("New password must contain at least one special character");
 
         user.UpdatePasswordHash(BCryptPasswordHash(dto.NewPassword));
         await _userRepository.UpdateAsync(user);
