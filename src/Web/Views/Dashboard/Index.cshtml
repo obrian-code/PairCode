@@ -1,0 +1,123 @@
+@model PairCode.Application.DTOs.DashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Breadcrumbs"] = new[] { new KeyValuePair<string, string>("Dashboard", string.Empty) };
+}
+
+@await Html.PartialAsync("_Breadcrumbs")
+
+<h2>Dashboard</h2>
+<hr>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Active Rooms</h5>
+                <p class="card-text display-6">@Model.ActiveRooms</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-secondary">
+            <div class="card-body">
+                <h5 class="card-title">Finished Rooms</h5>
+                <p class="card-text display-6">@Model.FinishedRooms</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Active Participants</h5>
+                <p class="card-text display-6">@Model.ActiveParticipants</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Total Participants</h5>
+                <p class="card-text display-6">@Model.TotalParticipants</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Total Messages</h5>
+                <p class="card-text display-6">@Model.TotalMessages</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Total Sessions</h5>
+                <p class="card-text display-6">@Model.TotalSessions</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Room Status Distribution</div>
+            <div class="card-body">
+                <canvas id="roomsChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Activity Overview</div>
+            <div class="card-body">
+                <canvas id="activityChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script>
+        new Chart(document.getElementById("roomsChart"), {
+            type: "doughnut",
+            data: {
+                labels: ["Active", "Finished"],
+                datasets: [{
+                    data: [@Model.ActiveRooms, @Model.FinishedRooms],
+                    backgroundColor: ["#198754", "#6c757d"]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "bottom" }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("activityChart"), {
+            type: "bar",
+            data: {
+                labels: ["Active Participants", "Total Participants", "Messages", "Sessions"],
+                datasets: [{
+                    label: "Count",
+                    data: [@Model.ActiveParticipants, @Model.TotalParticipants, @Model.TotalMessages, @Model.TotalSessions],
+                    backgroundColor: ["#198754", "#0dcaf0", "#ffc107", "#dc3545"]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,31 @@
+@model PairCode.Application.DTOs.JoinRoomDto
+@{
+    ViewData["Title"] = "Join Room";
+    ViewData["Breadcrumbs"] = new[] {
+        new KeyValuePair<string, string>("Rooms", Url.Action("Index") ?? string.Empty),
+        new KeyValuePair<string, string>("Join", string.Empty)
+    };
+}
+
+@await Html.PartialAsync("_Breadcrumbs")
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Join Room</h2>
+        <hr>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="AccessCode" class="form-label">Access Code</label>
+                <input asp-for="AccessCode" class="form-control" placeholder="Enter 6-character code" maxlength="6" style="text-transform:uppercase" />
+                <span asp-validation-for="AccessCode" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Join</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,20 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+.vs/
+
+## IDE
+.idea/
+*.swp
+*.swo
+
+## Secrets
+.env
+appsettings.Secrets.json
+
+## Coverage
+coverage/
+*.coverage

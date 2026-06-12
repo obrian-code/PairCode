@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center py-4">
+    <div style="font-size: 3rem; margin-bottom: 0.5rem;">&#x1F44B;</div>
+    <h1>Welcome, @User.Identity?.Name!</h1>
+    <p class="lead text-muted">What would you like to do today?</p>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body py-4">
+                <div style="font-size: 2.5rem;">&#x2795;</div>
+                <h5 class="card-title mt-2">Create Room</h5>
+                <p class="card-text text-muted">Start a new interview or pair programming session.</p>
+                <a class="btn btn-primary" asp-controller="Room" asp-action="Create">Create</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body py-4">
+                <div style="font-size: 2.5rem;">&#x1F50D;</div>
+                <h5 class="card-title mt-2">Join Room</h5>
+                <p class="card-text text-muted">Enter an access code to join an existing session.</p>
+                <a class="btn btn-outline-primary" asp-controller="Room" asp-action="Join">Join</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body py-4">
+                <div style="font-size: 2.5rem;">&#x1F4CA;</div>
+                <h5 class="card-title mt-2">Dashboard</h5>
+                <p class="card-text text-muted">View platform statistics and activity metrics.</p>
+                <a class="btn btn-outline-primary" asp-controller="Dashboard" asp-action="Index">View</a>
+            </div>
+        </div>
+    </div>
+</div>

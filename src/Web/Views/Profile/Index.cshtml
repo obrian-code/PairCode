@@ -1,0 +1,65 @@
+@model PairCode.Application.DTOs.UserProfileDto
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["Breadcrumbs"] = new[] { new KeyValuePair<string, string>("Profile", string.Empty) };
+}
+
+@await Html.PartialAsync("_Breadcrumbs")
+
+@if (TempData["SuccessMessage"] is string msg)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @msg
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Profile</h2>
+        <hr>
+        <dl class="row">
+            <dt class="col-sm-4">Name</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4">Email</dt>
+            <dd class="col-sm-8">@Model.Email</dd>
+
+            <dt class="col-sm-4">Role</dt>
+            <dd class="col-sm-8">@Model.Role</dd>
+
+            <dt class="col-sm-4">Member Since</dt>
+            <dd class="col-sm-8">@Model.CreatedAt.ToString("g")</dd>
+        </dl>
+
+        <hr>
+        <h4>Update Name</h4>
+        <form asp-controller="Profile" asp-action="Update" method="post" class="mb-4">
+            <div class="input-group mb-3">
+                <input name="name" class="form-control" value="@Model.Name" required />
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+
+        <hr>
+        <h4>Change Password</h4>
+        <form asp-controller="Profile" asp-action="ChangePassword" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+            <div class="mb-3">
+                <label for="CurrentPassword" class="form-label">Current Password</label>
+                <input name="CurrentPassword" type="password" class="form-control" required />
+                <span asp-validation-for="@(new PairCode.Application.DTOs.ChangePasswordDto("","").CurrentPassword)" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="NewPassword" class="form-label">New Password</label>
+                <input name="NewPassword" type="password" class="form-control" required minlength="6" />
+                <div class="form-text">At least 6 characters</div>
+            </div>
+            <button type="submit" class="btn btn-warning">Change Password</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

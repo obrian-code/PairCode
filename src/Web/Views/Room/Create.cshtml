@@ -1,0 +1,31 @@
+@model PairCode.Application.DTOs.CreateRoomDto
+@{
+    ViewData["Title"] = "Create Room";
+    ViewData["Breadcrumbs"] = new[] {
+        new KeyValuePair<string, string>("Rooms", Url.Action("Index") ?? string.Empty),
+        new KeyValuePair<string, string>("Create", string.Empty)
+    };
+}
+
+@await Html.PartialAsync("_Breadcrumbs")
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Create Room</h2>
+        <hr>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="Enter room name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
