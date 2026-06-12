@@ -24,6 +24,14 @@ public class RoomRepository : IRoomRepository
     public async Task<IEnumerable<Room>> GetAllAsync() =>
         await _context.Rooms.OrderByDescending(r => r.CreatedAt).ToListAsync();
 
+    public async Task<(IEnumerable<Room> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
+    {
+        var query = _context.Rooms.OrderByDescending(r => r.CreatedAt);
+        var totalCount = await query.CountAsync();
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        return (items, totalCount);
+    }
+
     public async Task<IEnumerable<Room>> GetActiveRoomsAsync() =>
         await _context.Rooms.Where(r => r.Status == RoomStatus.Active).ToListAsync();
 

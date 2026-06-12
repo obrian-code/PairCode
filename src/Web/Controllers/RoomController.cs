@@ -57,10 +57,10 @@ public class RoomController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 20)
     {
-        var rooms = await _roomService.GetAllRoomsAsync();
-        return View(rooms);
+        var result = await _roomService.GetPagedRoomsAsync(page, pageSize);
+        return View(result);
     }
 
     [HttpGet]

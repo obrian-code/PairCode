@@ -14,9 +14,9 @@ public class AuditController : Controller
         _auditService = auditService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 50)
     {
-        var logs = await _auditService.GetAllLogsAsync();
-        return View(logs);
+        var result = await _auditService.GetPagedLogsAsync(page, pageSize);
+        return View(result);
     }
 }

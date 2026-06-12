@@ -29,4 +29,13 @@ public class AuditService : IAuditService
             l.Id, l.UserId, l.User?.Name ?? "Unknown", l.Action, l.EntityName, l.EntityId, l.Details, l.Timestamp
         ));
     }
+
+    public async Task<PagedResult<AuditLogDto>> GetPagedLogsAsync(int page, int pageSize)
+    {
+        var (items, totalCount) = await _auditLogRepository.GetPagedAsync(page, pageSize);
+        var dtos = items.Select(l => new AuditLogDto(
+            l.Id, l.UserId, l.User?.Name ?? "Unknown", l.Action, l.EntityName, l.EntityId, l.Details, l.Timestamp
+        ));
+        return new PagedResult<AuditLogDto>(dtos, totalCount, page, pageSize);
+    }
 }

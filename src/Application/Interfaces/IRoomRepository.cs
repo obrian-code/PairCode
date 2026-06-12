@@ -7,6 +7,7 @@ public interface IRoomRepository
     Task<Room?> GetByIdAsync(Guid id);
     Task<Room?> GetByAccessCodeAsync(string accessCode);
     Task<IEnumerable<Room>> GetAllAsync();
+    Task<(IEnumerable<Room> Items, int TotalCount)> GetPagedAsync(int page, int pageSize);
     Task<IEnumerable<Room>> GetActiveRoomsAsync();
     Task<IEnumerable<Room>> GetFinishedRoomsAsync();
     Task<Room> AddAsync(Room room);

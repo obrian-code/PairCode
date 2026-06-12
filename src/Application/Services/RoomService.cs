@@ -55,6 +55,15 @@ public class RoomService
         return dtos;
     }
 
+    public async Task<PagedResult<RoomDto>> GetPagedRoomsAsync(int page, int pageSize)
+    {
+        var (items, totalCount) = await _roomRepository.GetPagedAsync(page, pageSize);
+        var dtos = new List<RoomDto>();
+        foreach (var room in items)
+            dtos.Add(await MapToDto(room));
+        return new PagedResult<RoomDto>(dtos, totalCount, page, pageSize);
+    }
+
     public async Task DeleteRoomAsync(Guid id, Guid userId)
     {
         var room = await _roomRepository.GetByIdAsync(id)

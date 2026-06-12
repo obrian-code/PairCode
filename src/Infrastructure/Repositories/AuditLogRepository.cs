@@ -24,6 +24,14 @@ public class AuditLogRepository : IAuditLogRepository
         await _context.AuditLogs.Include(l => l.User)
             .OrderByDescending(l => l.Timestamp).ToListAsync();
 
+    public async Task<(IEnumerable<AuditLog> Items, int TotalCount)> GetPagedAsync(int page, int pageSize)
+    {
+        var query = _context.AuditLogs.Include(l => l.User).OrderByDescending(l => l.Timestamp);
+        var totalCount = await query.CountAsync();
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        return (items, totalCount);
+    }
+
     public async Task<IEnumerable<AuditLog>> GetByUserIdAsync(Guid userId) =>
         await _context.AuditLogs.Include(l => l.User)
             .Where(l => l.UserId == userId).OrderByDescending(l => l.Timestamp).ToListAsync();

@@ -40,3 +40,8 @@ public record DashboardDto(
 );
 
 public record AuditLogDto(Guid Id, Guid UserId, string UserName, string Action, string EntityName, string EntityId, string Details, DateTime Timestamp);
+
+public record PagedResult<T>(IEnumerable<T> Items, int TotalCount, int Page, int PageSize)
+{
+    public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+}

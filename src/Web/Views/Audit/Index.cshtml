@@ -1,4 +1,4 @@
-@model IEnumerable<PairCode.Application.DTOs.AuditLogDto>
+@model PairCode.Application.DTOs.PagedResult<PairCode.Application.DTOs.AuditLogDto>
 @{
     ViewData["Title"] = "Audit Log";
     ViewData["Breadcrumbs"] = new[] { new KeyValuePair<string, string>("Audit", string.Empty) };
@@ -13,7 +13,7 @@
     <input id="auditSearch" class="form-control" placeholder="Search by user, action, or details..." aria-label="Search audit logs" />
 </div>
 
-@if (!Model.Any())
+@if (!Model.Items.Any())
 {
     <div class="empty-state">
         <div class="empty-icon">&#x1F50D;</div>
@@ -35,7 +35,7 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var log in Model)
+                @foreach (var log in Model.Items)
                 {
                     <tr>
                         <td>@log.UserName</td>
@@ -55,6 +55,30 @@ else
             </tbody>
         </table>
     </div>
+
+    <nav aria-label="Audit pagination">
+        <ul class="pagination justify-content-center">
+            @if (Model.Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-route-page="@(Model.Page - 1)" asp-route-pageSize="@Model.PageSize">&laquo; Previous</a>
+                </li>
+            }
+            @for (var i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
+            {
+                <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <a class="page-link" asp-route-page="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                </li>
+            }
+            @if (Model.Page < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-route-page="@(Model.Page + 1)" asp-route-pageSize="@Model.PageSize">Next &raquo;</a>
+                </li>
+            }
+        </ul>
+        <p class="text-muted text-center small">Showing page @Model.Page of @Model.TotalPages (@Model.TotalCount total records)</p>
+    </nav>
 }
 
 @section Scripts {
