@@ -1,0 +1,18 @@
+@using PairCode.Web.Controllers
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h1 class="display-1 text-danger">500</h1>
+        <h2>Something went wrong</h2>
+        <p class="text-muted">An unexpected error occurred. Please try again later.</p>
+        @if (Model.ShowRequestId)
+        {
+            <p class="small text-muted">Request ID: @Model.RequestId</p>
+        }
+        <a asp-action="Index" class="btn btn-primary mt-3">Go Home</a>
+    </div>
+</div>

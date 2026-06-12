@@ -24,23 +24,53 @@ public class ExceptionMiddleware
         {
             _logger.LogWarning(ex, "Unauthorized access attempt");
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(SerializeError("Unauthorized", ex.Message));
+
+            if (AcceptsHtml(context))
+            {
+                context.Response.Redirect($"/Auth/Login?returnUrl={context.Request.Path}");
+            }
+            else
+            {
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(SerializeError("Unauthorized", ex.Message));
+            }
         }
         catch (InvalidOperationException ex)
         {
             _logger.LogWarning(ex, "Invalid operation");
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(SerializeError("Bad Request", ex.Message));
+
+            if (AcceptsHtml(context))
+            {
+                context.Response.Redirect($"/Home/Error?message={Uri.EscapeDataString(ex.Message)}");
+            }
+            else
+            {
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(SerializeError("Bad Request", ex.Message));
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception");
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(SerializeError("Internal Server Error", "An unexpected error occurred"));
+
+            if (AcceptsHtml(context))
+            {
+                context.Response.Redirect("/Home/Error");
+            }
+            else
+            {
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(SerializeError("Internal Server Error", "An unexpected error occurred"));
+            }
         }
+    }
+
+    private static bool AcceptsHtml(HttpContext context)
+    {
+        var accept = context.Request.Headers.Accept.ToString();
+        return accept.Contains("text/html", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string SerializeError(string title, string detail)
