@@ -10,6 +10,7 @@ public class User
     public string PasswordHash { get; private set; } = null!;
     public UserRole Role { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    public bool EmailVerified { get; private set; }
 
     private User() { }
 
@@ -36,5 +37,10 @@ public class User
     public void UpdatePasswordHash(string newHash)
     {
         PasswordHash = newHash;
+    }
+
+    public void MarkEmailVerified()
+    {
+        EmailVerified = true;
     }
 }

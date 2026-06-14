@@ -1,30 +1,30 @@
 @model PairCode.Application.DTOs.PagedResult<PairCode.Application.DTOs.RoomDto>
 @{
-    ViewData["Title"] = "Rooms";
-    ViewData["Breadcrumbs"] = new[] { new KeyValuePair<string, string>("Rooms", string.Empty) };
+    ViewData["Title"] = T["TitleRooms"];
+    ViewData["Breadcrumbs"] = new[] { new BreadcrumbItem("Rooms") };
 }
 
 @await Html.PartialAsync("_Breadcrumbs")
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0">Rooms</h2>
+    <h2 class="mb-0">@T["TitleRooms"]</h2>
     <div class="d-flex gap-2">
-        <a class="btn btn-primary" asp-action="Create">Create Room</a>
-        <a class="btn btn-outline-primary" asp-action="Join">Join Room</a>
+        <a class="btn btn-primary" asp-action="Create">@T["CreateRoom"]</a>
+        <a class="btn btn-outline-primary" asp-action="Join">@T["JoinRoom"]</a>
     </div>
 </div>
 
 <div class="mb-3">
-    <input id="roomSearch" class="form-control" placeholder="Search rooms by name..." aria-label="Search rooms" />
+    <input id="roomSearch" class="form-control" placeholder="@T["SearchRooms"]" aria-label="@T["SearchRoomsLabel"]" />
 </div>
 
 @if (!Model.Items.Any())
 {
     <div class="empty-state">
-        <div class="empty-icon">&#x1F3E0;</div>
-        <h5>No rooms yet</h5>
-        <p class="text-muted">Create a new room or join one using an access code.</p>
-        <a class="btn btn-primary" asp-action="Create">Create Your First Room</a>
+        <div class="empty-icon" role="img" aria-label="House">&#x1F3E0;</div>
+        <h5>@T["NoRoomsYet"]</h5>
+        <p class="text-muted">@T["NoRoomsDesc"]</p>
+        <a class="btn btn-primary" asp-action="Create">@T["CreateYourFirstRoom"]</a>
     </div>
 }
 else
@@ -33,11 +33,11 @@ else
         <table class="table table-hover" id="roomsTable">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Code</th>
-                    <th>Status</th>
-                    <th>Participants</th>
-                    <th>Created</th>
+                    <th>@T["NameHeader"]</th>
+                    <th>@T["Code"]</th>
+                    <th>@T["Status"]</th>
+                    <th>@T["Participants"]</th>
+                    <th>@T["Created"]</th>
                     <th></th>
                 </tr>
             </thead>
@@ -53,12 +53,17 @@ else
                                 "Finished" => "bg-secondary",
                                 "Cancelled" => "bg-danger",
                                 _ => "bg-warning"
-                            })">@room.Status</span>
+                            })"><span aria-hidden="true">@(room.Status switch {
+                                "Active" => "✓ ",
+                                "Finished" => "◉ ",
+                                "Cancelled" => "✗ ",
+                                _ => ""
+                            })</span>@room.Status</span>
                         </td>
                         <td>@room.ParticipantCount</td>
                         <td>@room.CreatedAt.ToString("g")</td>
                         <td>
-                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@room.Id">Open</a>
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@room.Id">@T["Open"]</a>
                         </td>
                     </tr>
                 }
@@ -71,7 +76,7 @@ else
             @if (Model.Page > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.Page - 1)" asp-route-pageSize="@Model.PageSize">&laquo; Previous</a>
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.Page - 1)" asp-route-pageSize="@Model.PageSize">&laquo; @T["Previous"]</a>
                 </li>
             }
             @for (var i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
@@ -83,11 +88,11 @@ else
             @if (Model.Page < Model.TotalPages)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.Page + 1)" asp-route-pageSize="@Model.PageSize">Next &raquo;</a>
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.Page + 1)" asp-route-pageSize="@Model.PageSize">@T["Next"] &raquo;</a>
                 </li>
             }
         </ul>
-        <p class="text-muted text-center small">Showing page @Model.Page of @Model.TotalPages (@Model.TotalCount total rooms)</p>
+        <p class="text-muted text-center small">@T["ShowingPageRooms", Model.Page, Model.TotalPages, Model.TotalCount]</p>
     </nav>
 }
 

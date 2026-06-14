@@ -4,43 +4,52 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PairCode</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>💻</text></svg>" />
+    <meta name="description" content="@(ViewData["Description"] ?? "PairCode — Real-time collaborative coding platform for technical interviews and pair programming sessions.")" />
+    <link rel="icon" href="~/favicon.ico" />
+    <link rel="apple-touch-icon" href="~/favicon.ico" sizes="180x180" />
+    <link rel="manifest" href="~/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="PairCode" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+    <a href="#main-content" class="skip-to-content">@T["SkipToContent"]</a>
 
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
-                    <span style="font-size: 1.4rem;">&#x1F4BB;</span>
-                    <span>PairCode</span>
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index" aria-label="@T["PairCodeHome"]">
+                    <span style="font-size: 1.4rem;" aria-hidden="true">&#x1F4BB;</span>
+                    <span>@T["AppName"]</span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-label="@T["ToggleNavigation"]">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Room" asp-action="Index">Rooms</a>
+                                <a class="nav-link @(currentController == "Room" ? "active" : "")" asp-controller="Room" asp-action="Index">@T["Rooms"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Room" asp-action="Create">Create Room</a>
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Create" && currentController == "Room" ? "active" : "")" asp-controller="Room" asp-action="Create">@T["CreateRoom"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Room" asp-action="Join">Join Room</a>
+                                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Join" && currentController == "Room" ? "active" : "")" asp-controller="Room" asp-action="Join">@T["JoinRoom"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                                <a class="nav-link @(currentController == "Dashboard" ? "active" : "")" asp-controller="Dashboard" asp-action="Index">@T["Dashboard"]</a>
                             </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Audit" asp-action="Index">Audit</a>
+                                    <a class="nav-link @(currentController == "Audit" ? "active" : "")" asp-controller="Audit" asp-action="Index">@T["Audit"]</a>
                                 </li>
                             }
                         }
@@ -49,22 +58,22 @@
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Profile" asp-action="Index">Profile</a>
+                                <a class="nav-link" asp-controller="Profile" asp-action="Index">@T["Profile"]</a>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="nav-link btn btn-link">Logout</button>
+                                    <button type="submit" class="nav-link btn btn-link nav-logout-btn" onclick="return confirm('@T["ConfirmLogout"]')">@T["Logout"]</button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-link" asp-controller="Auth" asp-action="Login">@T["Login"]</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Register">Register</a>
+                                <a class="nav-link" asp-controller="Auth" asp-action="Register">@T["Register"]</a>
                             </li>
                         }
                     </ul>
@@ -83,17 +92,40 @@
 
     <footer class="border-top footer text-muted">
         <div class="container d-flex justify-content-between align-items-center">
-            <span>&copy; 2026 - PairCode</span>
-            <span>
-                <a href="#" class="text-muted text-decoration-none me-2">Terms</a>
-                <a href="#" class="text-muted text-decoration-none">Privacy</a>
-            </span>
+            <span>&copy; 2026 - @T["AppName"]</span>
+            <div class="d-flex gap-3 align-items-center">
+                <a asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none">@T["Privacy"]</a>
+                <a href="#" class="text-muted text-decoration-none">@T["Support"]</a>
+                <a href="#" class="text-muted text-decoration-none">@T["Documentation"]</a>
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle text-muted" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        🌐
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#" data-culture="en">English</a></li>
+                        <li><a class="dropdown-item" href="#" data-culture="es">Español</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" defer></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="~/js/site.js" asp-append-version="true" defer></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/js/service-worker.js");
+        }
+        document.querySelectorAll("[data-culture]").forEach(function(el) {
+            el.addEventListener("click", function(e) {
+                e.preventDefault();
+                var culture = this.dataset.culture;
+                document.cookie = ".AspNetCore.Culture=c=" + culture + "|uic=" + culture + "; path=/; max-age=" + 365*24*60*60;
+                location.reload();
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

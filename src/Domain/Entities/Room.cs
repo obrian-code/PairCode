@@ -10,6 +10,8 @@ public class Room
     public RoomStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public Guid CreatedBy { get; private set; }
+    public bool IsDeleted { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
 
     private readonly List<Participant> _participants = [];
     public IReadOnlyCollection<Participant> Participants => _participants.AsReadOnly();
@@ -59,6 +61,12 @@ public class Room
     public void UpdateName(string newName)
     {
         Name = newName;
+    }
+
+    public void MarkDeleted()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
     }
 
     private static string GenerateAccessCode()

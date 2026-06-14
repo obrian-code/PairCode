@@ -34,6 +34,15 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(x => x.CreatedBy)
             .IsRequired();
 
+        builder.Property(x => x.IsDeleted)
+            .IsRequired()
+            .HasDefaultValue(false);
+
+        builder.Property(x => x.DeletedAt)
+            .IsRequired(false);
+
+        builder.HasIndex(x => x.IsDeleted);
+
         builder.Ignore(x => x.Participants);
         builder.Ignore(x => x.Messages);
         builder.Ignore(x => x.Documents);

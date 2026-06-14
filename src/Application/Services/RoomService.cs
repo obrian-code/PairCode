@@ -70,8 +70,9 @@ public class RoomService
             ?? throw new InvalidOperationException("Room not found");
 
         RequireOwnership(room, userId);
-        await _roomRepository.DeleteAsync(room);
-        await _auditService.LogAsync(userId, "DeleteRoom", nameof(Room), id.ToString(), "Room deleted");
+        room.MarkDeleted();
+        await _roomRepository.UpdateAsync(room);
+        await _auditService.LogAsync(userId, "DeleteRoom", nameof(Room), id.ToString(), "Room soft-deleted");
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -135,6 +136,18 @@ public class RoomService
         await _unitOfWork.SaveChangesAsync();
 
         return await MapToDto(room);
+    }
+
+    public async Task UpdateRoomAsync(Guid id, string name, Guid userId)
+    {
+        var room = await _roomRepository.GetByIdAsync(id)
+            ?? throw new InvalidOperationException("Room not found");
+
+        RequireOwnership(room, userId);
+        room.UpdateName(name);
+        await _roomRepository.UpdateAsync(room);
+        await _auditService.LogAsync(userId, "UpdateRoom", nameof(Room), id.ToString(), $"Room renamed to {name}");
+        await _unitOfWork.SaveChangesAsync();
     }
 
     private async Task<RoomDto> MapToDto(Room room)

@@ -2,8 +2,8 @@
 @{
     ViewData["Title"] = Model.Name;
     ViewData["Breadcrumbs"] = new[] {
-        new KeyValuePair<string, string>("Rooms", Url.Action("Index") ?? string.Empty),
-        new KeyValuePair<string, string>(Model.Name, string.Empty)
+        new BreadcrumbItem("Rooms", Url.Action("Index")),
+        new BreadcrumbItem(Model.Name)
     };
     var messages = ViewBag.Messages as IEnumerable<PairCode.Application.DTOs.ChatMessageDto> ?? [];
     var participants = ViewBag.Participants as IEnumerable<PairCode.Application.DTOs.ParticipantDto> ?? [];
@@ -15,14 +15,28 @@
 <div class="row">
     <div class="col-md-8">
         <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
-            <h2 class="mb-0">@Model.Name</h2>
+            <div class="d-flex align-items-center gap-2">
+                <h2 class="mb-0">@Model.Name</h2>
+                <button class="btn btn-sm btn-outline-secondary" id="renameBtn" title="@T["RenameRoom"]">&#9998;</button>
+            </div>
+            <form id="renameForm" asp-action="UpdateName" asp-route-id="@Model.Id" method="post" class="d-none align-items-center gap-2">
+                @Html.AntiForgeryToken()
+                <input name="name" class="form-control form-control-sm" style="width:auto" value="@Model.Name" required maxlength="100" />
+                <button type="submit" class="btn btn-sm btn-primary">@T["Save"]</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="cancelRenameBtn">@T["Cancel"]</button>
+            </form>
             <span class="badge bg-dark fs-6">@Model.AccessCode</span>
             <span class="badge @(Model.Status switch {
                 "Active" => "bg-success",
                 "Finished" => "bg-secondary",
                 "Cancelled" => "bg-danger",
                 _ => "bg-warning"
-            })">@Model.Status</span>
+            })"><span aria-hidden="true">@(Model.Status switch {
+                "Active" => "✓ ",
+                "Finished" => "◉ ",
+                "Cancelled" => "✗ ",
+                _ => ""
+            })</span>@Model.Status</span>
         </div>
 
         @if (Model.Status == "Created" || Model.Status == "Active")
@@ -30,33 +44,33 @@
             <div class="mb-3 d-flex gap-2 flex-wrap">
                 <form asp-action="Open" asp-route-id="@Model.Id" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-success btn-sm">Open Room</button>
+                    <button type="submit" class="btn btn-outline-success btn-sm">@T["OpenRoom"]</button>
                 </form>
                 <form asp-action="Close" asp-route-id="@Model.Id" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-warning btn-sm">Close Room</button>
+                    <button type="submit" class="btn btn-outline-warning btn-sm">@T["CloseRoom"]</button>
                 </form>
                 <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Cancel this room?">Cancel Room</button>
+                    <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="@T["CancelThisRoom"]">@T["CancelRoom"]</button>
                 </form>
                 <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Delete this room permanently?">Delete Room</button>
+                    <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="@T["DeleteThisRoom"]">@T["DeleteRoom"]</button>
                 </form>
                 <form asp-action="Leave" asp-route-id="@Model.Id" method="post" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-secondary btn-sm">Leave Room</button>
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">@T["LeaveRoom"]</button>
                 </form>
             </div>
         }
 
         <ul class="nav nav-tabs" id="roomTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="chat-tab" data-bs-toggle="tab" data-bs-target="#chat" type="button" role="tab">Chat</button>
+                <button class="nav-link active" id="chat-tab" data-bs-toggle="tab" data-bs-target="#chat" type="button" role="tab">@T["Chat"]</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="editor-tab" data-bs-toggle="tab" data-bs-target="#editor" type="button" role="tab">Editor</button>
+                <button class="nav-link" id="editor-tab" data-bs-toggle="tab" data-bs-target="#editor" type="button" role="tab">@T["Editor"]</button>
             </li>
         </ul>
 
@@ -82,13 +96,13 @@
                     </div>
                 </div>
                 <div class="input-group">
-                    <input id="messageInput" class="form-control" placeholder="Type a message..." aria-label="Message text" />
-                    <button id="sendButton" class="btn btn-primary">Send</button>
+                    <input id="messageInput" class="form-control" placeholder="@T["MessagePlaceholder"]" aria-label="@T["MessageLabel"]" />
+                    <button id="sendButton" class="btn btn-primary">@T["Send"]</button>
                 </div>
             </div>
             <div class="tab-pane fade" id="editor" role="tabpanel">
                 <div class="editor-toolbar">
-                    <label for="languageSelect" class="form-label mb-0">Language:</label>
+                    <label for="languageSelect" class="form-label mb-0">@T["Language"]</label>
                     <select id="languageSelect" class="form-select form-select-sm" style="width: auto;">
                         <option value="javascript">JavaScript</option>
                         <option value="python">Python</option>
@@ -96,7 +110,7 @@
                         <option value="html">HTML</option>
                         <option value="css">CSS</option>
                     </select>
-                    <span class="version-badge text-muted small">Version @(document?.Version ?? 1) | Updated: @(document?.UpdatedAt.ToString("g") ?? "N/A")</span>
+                    <span class="version-badge text-muted small">@T["VersionUpdated", document?.Version ?? 1, document?.UpdatedAt.ToString("g") ?? "N/A"]</span>
                 </div>
                 <div class="editor-container">
                     <textarea id="editorContent" class="form-control font-monospace" rows="15">@document?.Content</textarea>
@@ -107,8 +121,8 @@
     <div class="col-md-4">
         <div class="card participants-card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Participants (@participants.Count())</span>
-                <button class="btn btn-sm btn-outline-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#participantsOffcanvas">View</button>
+                <span>@T["Participants"] (@participants.Count())</span>
+                <button class="btn btn-sm btn-outline-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#participantsOffcanvas">@T["ParticipantListView"]</button>
             </div>
             <div class="card-body d-none d-md-block">
                 <ul class="list-group list-group-flush" id="participantsList">
@@ -120,7 +134,7 @@
                                 <div>@p.User.Name</div>
                                 <small class="text-muted">@p.User.Role</small>
                             </div>
-                            <span class="ms-auto badge bg-@(p.LeftAt == null ? "success" : "secondary") rounded-pill">@(p.LeftAt == null ? "Online" : "Left")</span>
+                            <span class="ms-auto badge bg-@(p.LeftAt == null ? "success" : "secondary") rounded-pill"><span aria-hidden="true">@(p.LeftAt == null ? "✓ " : "✗ ")</span>@(p.LeftAt == null ? "Online" : "Left")</span>
                         </li>
                     }
                 </ul>
@@ -130,9 +144,9 @@
 </div>
 
 <!-- Offcanvas for mobile participants -->
-<div class="offcanvas offcanvas-end d-md-none" tabindex="-1" id="participantsOffcanvas">
+<div class="offcanvas offcanvas-end d-md-none" tabindex="-1" id="participantsOffcanvas" aria-labelledby="participantsOffcanvasLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title">Participants</h5>
+        <h5 class="offcanvas-title" id="participantsOffcanvasLabel">Participants</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
@@ -145,7 +159,7 @@
                         <div>@p.User.Name</div>
                         <small class="text-muted">@p.User.Role</small>
                     </div>
-                    <span class="ms-auto badge bg-@(p.LeftAt == null ? "success" : "secondary")">@(p.LeftAt == null ? "Online" : "Left")</span>
+                    <span class="ms-auto badge bg-@(p.LeftAt == null ? "success" : "secondary")"><span aria-hidden="true">@(p.LeftAt == null ? "✓ " : "✗ ")</span>@(p.LeftAt == null ? "Online" : "Left")</span>
                 </li>
             }
         </ul>
@@ -153,14 +167,14 @@
 </div>
 
 @section Scripts {
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/dracula.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/python/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/clike/clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/xml/xml.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/css/css.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css" integrity="sha384-zaeBlB/vwYsDRSlFajnDd7OydJ0cWk+c2OWybl3eSUf6hW2EbhlCsQPqKr3gkznT" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/dracula.min.css" integrity="sha384-ccdJwIIg/K0Ab6aXF4MPACh7ckk61tvQFTrfkhXZEALgAETURNZIAuQLcS/aPbrM" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js" integrity="sha384-BEgQlz0fN4eG0n4jipmUe+nOg65hPY7L0E/lPVRaOPdzAfLPGEbXnpAodHtSnlwM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js" integrity="sha384-g0o+WW9mdIxA7LaaCKTkRm0M5TVT+Bb4s9eocxPsI2G0Xm0POG9iD6G6qP1IIsfS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/python/python.min.js" integrity="sha384-Xy+2exU6lBoT4OpUOtnQb+cUpn+nlJQEHvRobWVtwz6wIsw4oNoO7xyd/l8rYgMy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/clike/clike.min.js" integrity="sha384-o9m634t2Hy35pPNKd9Xe16ntbSw11jCOuKPDrzQGXI8k87L2JZthaA3rwmJjnF7Z" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/xml/xml.min.js" integrity="sha384-xPpkMo5nDgD98fIcuRVYhxkZV6/9Y4L8s3p0J5c4MxgJkyKJ8BJr+xfRkq7kn6Tw" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/css/css.min.js" integrity="sha384-fpeIC2FZuPmw7mIsTvgB5BNc8QVxQC/nWg2W+CgPYOAiBiYVuHe2E8HiTWHBMIJQ" crossorigin="anonymous"></script>
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/js/chat.js" asp-append-version="true"></script>
     <script src="~/js/editor.js" asp-append-version="true"></script>
@@ -168,5 +182,16 @@
         const roomId = '@Model.Id';
         const currentUserId = '@(User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))';
         const currentUserName = '@(User.Identity?.Name)';
+
+        document.getElementById("renameBtn")?.addEventListener("click", function() {
+            document.getElementById("renameBtn").parentElement.classList.add("d-none");
+            document.getElementById("renameForm").classList.remove("d-none");
+            document.getElementById("renameForm").classList.add("d-flex");
+        });
+        document.getElementById("cancelRenameBtn")?.addEventListener("click", function() {
+            document.getElementById("renameForm").classList.add("d-none");
+            document.getElementById("renameForm").classList.remove("d-flex");
+            document.getElementById("renameBtn").parentElement.classList.remove("d-none");
+        });
     </script>
 }

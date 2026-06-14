@@ -140,6 +140,26 @@ public class RoomController : Controller
     }
 
     [HttpPost]
+    public async Task<IActionResult> UpdateName(Guid id, [FromForm] string name)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        try
+        {
+            await _roomService.UpdateRoomAsync(id, name, userId);
+            TempData["SuccessMessage"] = "Room name updated";
+        }
+        catch (UnauthorizedAccessException)
+        {
+            TempData["ErrorMessage"] = "Only the room creator can rename the room";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["ErrorMessage"] = ex.Message;
+        }
+        return RedirectToAction("Details", new { id });
+    }
+
+    [HttpPost]
     public async Task<IActionResult> Leave(Guid id)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

@@ -1,24 +1,24 @@
 @model PairCode.Application.DTOs.PagedResult<PairCode.Application.DTOs.AuditLogDto>
 @{
-    ViewData["Title"] = "Audit Log";
-    ViewData["Breadcrumbs"] = new[] { new KeyValuePair<string, string>("Audit", string.Empty) };
+    ViewData["Title"] = T["TitleAudit"];
+    ViewData["Breadcrumbs"] = new[] { new BreadcrumbItem("Audit") };
 }
 
 @await Html.PartialAsync("_Breadcrumbs")
 
-<h2>Audit Log</h2>
+<h2>@T["TitleAudit"]</h2>
 <hr>
 
 <div class="mb-3">
-    <input id="auditSearch" class="form-control" placeholder="Search by user, action, or details..." aria-label="Search audit logs" />
+    <input id="auditSearch" class="form-control" placeholder="@T["SearchAudit"]" aria-label="@T["SearchAuditLabel"]" />
 </div>
 
 @if (!Model.Items.Any())
 {
     <div class="empty-state">
-        <div class="empty-icon">&#x1F50D;</div>
-        <h5>No audit records</h5>
-        <p class="text-muted">Audit logs will appear here as users perform actions.</p>
+        <div class="empty-icon" role="img" aria-label="Magnifying glass">&#x1F50D;</div>
+        <h5>@T["NoAuditRecords"]</h5>
+        <p class="text-muted">@T["NoAuditDesc"]</p>
     </div>
 }
 else
@@ -27,11 +27,11 @@ else
         <table class="table table-sm table-striped" id="auditTable">
             <thead>
                 <tr>
-                    <th>User</th>
-                    <th>Action</th>
-                    <th>Entity</th>
-                    <th>Details</th>
-                    <th>Timestamp</th>
+                    <th>@T["User"]</th>
+                    <th>@T["Action"]</th>
+                    <th>@T["Entity"]</th>
+                    <th>@T["Details"]</th>
+                    <th>@T["Timestamp"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,7 +45,12 @@ else
                                 "DeleteRoom" => "bg-danger",
                                 "CloseRoom" or "CancelRoom" => "bg-warning text-dark",
                                 _ => "bg-info text-dark"
-                            })">@log.Action</span>
+                            })"><span aria-hidden="true">@(log.Action switch {
+                                "CreateRoom" or "Register" => "✓ ",
+                                "DeleteRoom" => "✗ ",
+                                "CloseRoom" or "CancelRoom" => "◉ ",
+                                _ => "◆ "
+                            })</span>@log.Action</span>
                         </td>
                         <td>@log.EntityName</td>
                         <td>@log.Details</td>
@@ -61,7 +66,7 @@ else
             @if (Model.Page > 1)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-route-page="@(Model.Page - 1)" asp-route-pageSize="@Model.PageSize">&laquo; Previous</a>
+                    <a class="page-link" asp-route-page="@(Model.Page - 1)" asp-route-pageSize="@Model.PageSize">&laquo; @T["Previous"]</a>
                 </li>
             }
             @for (var i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
@@ -73,11 +78,11 @@ else
             @if (Model.Page < Model.TotalPages)
             {
                 <li class="page-item">
-                    <a class="page-link" asp-route-page="@(Model.Page + 1)" asp-route-pageSize="@Model.PageSize">Next &raquo;</a>
+                    <a class="page-link" asp-route-page="@(Model.Page + 1)" asp-route-pageSize="@Model.PageSize">@T["Next"] &raquo;</a>
                 </li>
             }
         </ul>
-        <p class="text-muted text-center small">Showing page @Model.Page of @Model.TotalPages (@Model.TotalCount total records)</p>
+        <p class="text-muted text-center small">@T["ShowingPageAudit", Model.Page, Model.TotalPages, Model.TotalCount]</p>
     </nav>
 }
 

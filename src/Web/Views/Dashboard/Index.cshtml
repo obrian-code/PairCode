@@ -1,7 +1,9 @@
 @model PairCode.Application.DTOs.DashboardDto
 @{
-    ViewData["Title"] = "Dashboard";
-    ViewData["Breadcrumbs"] = new[] { new KeyValuePair<string, string>("Dashboard", string.Empty) };
+    ViewData["Title"] = T["TitleDashboard"];
+    ViewData["Breadcrumbs"] = new[] { new BreadcrumbItem("Dashboard") };
+    var hasData = Model.ActiveRooms > 0 || Model.FinishedRooms > 0 || Model.TotalParticipants > 0
+                  || Model.TotalMessages > 0 || Model.TotalSessions > 0;
 }
 
 @await Html.PartialAsync("_Breadcrumbs")
@@ -9,115 +11,134 @@
 <h2>Dashboard</h2>
 <hr>
 
-<div class="row">
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-primary">
-            <div class="card-body">
-                <h5 class="card-title">Active Rooms</h5>
-                <p class="card-text display-6">@Model.ActiveRooms</p>
+@if (!hasData)
+{
+    <div class="dashboard-empty-state" data-version="v2">
+        <div style="font-size: 64px; margin-bottom: 16px;" aria-hidden="true">&#x1F4CA;</div>
+        <h3>@T["WelcomeDashboard"]</h3>
+        <p class="text-muted">@T["DashboardEmptyDesc"]</p>
+        <a asp-controller="Room" asp-action="Create" class="btn btn-primary btn-lg">
+            <span aria-hidden="true">+</span> @T["CreateFirstRoom"]
+        </a>
+    </div>
+}
+else
+{
+    <div data-build="BUILD-v3" class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card text-white" style="background-color: #2563eb;">
+                <div class="card-body">
+                    <h5 class="card-title">@T["ActiveRooms"]</h5>
+                    <p class="card-text display-6">@Model.ActiveRooms</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-white" style="background-color: #64748b;">
+                <div class="card-body">
+                    <h5 class="card-title">@T["FinishedRooms"]</h5>
+                    <p class="card-text display-6">@Model.FinishedRooms</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-white" style="background-color: #16a34a;">
+                <div class="card-body">
+                    <h5 class="card-title">@T["ActiveParticipants"]</h5>
+                    <p class="card-text display-6">@Model.ActiveParticipants</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-white" style="background-color: #0891b2;">
+                <div class="card-body">
+                    <h5 class="card-title">@T["TotalParticipants"]</h5>
+                    <p class="card-text display-6">@Model.TotalParticipants</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-white" style="background-color: #d97706;">
+                <div class="card-body">
+                    <h5 class="card-title">@T["TotalMessages"]</h5>
+                    <p class="card-text display-6">@Model.TotalMessages</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card text-white" style="background-color: #dc2626;">
+                <div class="card-body">
+                    <h5 class="card-title">@T["TotalSessions"]</h5>
+                    <p class="card-text display-6">@Model.TotalSessions</p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-secondary">
-            <div class="card-body">
-                <h5 class="card-title">Finished Rooms</h5>
-                <p class="card-text display-6">@Model.FinishedRooms</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-success">
-            <div class="card-body">
-                <h5 class="card-title">Active Participants</h5>
-                <p class="card-text display-6">@Model.ActiveParticipants</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <h5 class="card-title">Total Participants</h5>
-                <p class="card-text display-6">@Model.TotalParticipants</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <h5 class="card-title">Total Messages</h5>
-                <p class="card-text display-6">@Model.TotalMessages</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-danger">
-            <div class="card-body">
-                <h5 class="card-title">Total Sessions</h5>
-                <p class="card-text display-6">@Model.TotalSessions</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row mt-4">
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">Room Status Distribution</div>
-            <div class="card-body">
-                <canvas id="roomsChart" height="200"></canvas>
+    <div class="row mt-4">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">@T["RoomStatusDist"]</div>
+                <div class="card-body">
+                    <canvas id="roomsChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">@T["ActivityOverview"]</div>
+                <div class="card-body">
+                    <canvas id="activityChart" height="200"></canvas>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6 mb-4">
-        <div class="card">
-            <div class="card-header">Activity Overview</div>
-            <div class="card-body">
-                <canvas id="activityChart" height="200"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
+}
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-    <script>
-        new Chart(document.getElementById("roomsChart"), {
-            type: "doughnut",
-            data: {
-                labels: ["Active", "Finished"],
-                datasets: [{
-                    data: [@Model.ActiveRooms, @Model.FinishedRooms],
-                    backgroundColor: ["#198754", "#6c757d"]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: "bottom" }
-                }
-            }
-        });
-
-        new Chart(document.getElementById("activityChart"), {
-            type: "bar",
-            data: {
-                labels: ["Active Participants", "Total Participants", "Messages", "Sessions"],
-                datasets: [{
-                    label: "Count",
-                    data: [@Model.ActiveParticipants, @Model.TotalParticipants, @Model.TotalMessages, @Model.TotalSessions],
-                    backgroundColor: ["#198754", "#0dcaf0", "#ffc107", "#dc3545"]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+    @if (hasData)
+    {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha384-vsrfeLOOY6KuIYKDlmVH5UiBmgIdB1oEf7p01YgWHuqmOHfZr374+odEv96n9tNC" crossorigin="anonymous"></script>
+        <script>
+            document.getElementById("roomsChart").setAttribute("aria-label", `Room status distribution: ${@Model.ActiveRooms} active, ${@Model.FinishedRooms} finished`);
+            new Chart(document.getElementById("roomsChart"), {
+                type: "doughnut",
+                data: {
+                    labels: ["Active", "Finished"],
+                    datasets: [{
+                        data: [@Model.ActiveRooms, @Model.FinishedRooms],
+                        backgroundColor: ["#198754", "#6c757d"]
+                    }]
                 },
-                scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: "bottom" }
+                    }
                 }
-            }
-        });
-    </script>
+            });
+
+            document.getElementById("activityChart").setAttribute("aria-label", `Activity overview: ${@Model.ActiveParticipants} active participants, ${@Model.TotalParticipants} total, ${@Model.TotalMessages} messages, ${@Model.TotalSessions} sessions`);
+            new Chart(document.getElementById("activityChart"), {
+                type: "bar",
+                data: {
+                    labels: ["Active Participants", "Total Participants", "Messages", "Sessions"],
+                    datasets: [{
+                        label: "Count",
+                        data: [@Model.ActiveParticipants, @Model.TotalParticipants, @Model.TotalMessages, @Model.TotalSessions],
+                        backgroundColor: ["#198754", "#0dcaf0", "#ffc107", "#dc3545"]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+        </script>
+    }
 }

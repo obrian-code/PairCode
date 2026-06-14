@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="0" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppName" xml:space="preserve"><value>PairCode</value></data>
+  <data name="SkipToContent" xml:space="preserve"><value>Skip to main content</value></data>
+  <data name="ToggleNavigation" xml:space="preserve"><value>Toggle navigation</value></data>
+  <data name="PairCodeHome" xml:space="preserve"><value>PairCode home</value></data>
+  <data name="Rooms" xml:space="preserve"><value>Rooms</value></data>
+  <data name="CreateRoom" xml:space="preserve"><value>Create Room</value></data>
+  <data name="JoinRoom" xml:space="preserve"><value>Join Room</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Audit" xml:space="preserve"><value>Audit</value></data>
+  <data name="Profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="Login" xml:space="preserve"><value>Login</value></data>
+  <data name="Register" xml:space="preserve"><value>Register</value></data>
+  <data name="ConfirmLogout" xml:space="preserve"><value>Are you sure you want to logout?</value></data>
+  <data name="Privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Support" xml:space="preserve"><value>Support</value></data>
+  <data name="Documentation" xml:space="preserve"><value>Documentation</value></data>
+  <data name="English" xml:space="preserve"><value>English</value></data>
+  <data name="Spanish" xml:space="preserve"><value>Español</value></data>
+  <data name="WelcomeTo" xml:space="preserve"><value>Welcome to PairCode</value></data>
+  <data name="WelcomeUser" xml:space="preserve"><value>Welcome, {0}!</value></data>
+  <data name="WhatToDoToday" xml:space="preserve"><value>What would you like to do today?</value></data>
+  <data name="AppDescription" xml:space="preserve"><value>Real-time collaborative coding platform for technical interviews and pair programming sessions.</value></data>
+  <data name="GetStarted" xml:space="preserve"><value>Get Started</value></data>
+  <data name="SignIn" xml:space="preserve"><value>Sign In</value></data>
+  <data name="CodeTogether" xml:space="preserve"><value>Code Together</value></data>
+  <data name="CodeTogetherDesc" xml:space="preserve"><value>Real-time collaborative editor with syntax highlighting and version tracking.</value></data>
+  <data name="BuiltInChat" xml:space="preserve"><value>Built-in Chat</value></data>
+  <data name="BuiltInChatDesc" xml:space="preserve"><value>Communicate instantly with your pair using real-time messaging.</value></data>
+  <data name="RoleManagement" xml:space="preserve"><value>Role Management</value></data>
+  <data name="RoleManagementDesc" xml:space="preserve"><value>Admin, Interviewer, and Candidate roles with tailored permissions.</value></data>
+  <data name="CreateRoomCard" xml:space="preserve"><value>Create Room</value></data>
+  <data name="CreateRoomCardDesc" xml:space="preserve"><value>Start a new interview or pair programming session.</value></data>
+  <data name="JoinRoomCard" xml:space="preserve"><value>Join Room</value></data>
+  <data name="JoinRoomCardDesc" xml:space="preserve"><value>Enter an access code to join an existing session.</value></data>
+  <data name="DashboardCard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="DashboardCardDesc" xml:space="preserve"><value>View platform statistics and activity metrics.</value></data>
+  <data name="Create" xml:space="preserve"><value>Create</value></data>
+  <data name="Join" xml:space="preserve"><value>Join</value></data>
+  <data name="View" xml:space="preserve"><value>View</value></data>
+  <data name="TitleLogin" xml:space="preserve"><value>Login</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Password" xml:space="preserve"><value>Password</value></data>
+  <data name="ForgotPassword" xml:space="preserve"><value>Forgot Password?</value></data>
+  <data name="NoAccount" xml:space="preserve"><value>Don't have an account?</value></data>
+  <data name="TitleRegister" xml:space="preserve"><value>Register</value></data>
+  <data name="CreateAccount" xml:space="preserve"><value>Create Account</value></data>
+  <data name="Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Role" xml:space="preserve"><value>Role</value></data>
+  <data name="Interviewer" xml:space="preserve"><value>Interviewer</value></data>
+  <data name="Candidate" xml:space="preserve"><value>Candidate</value></data>
+  <data name="Admin" xml:space="preserve"><value>Admin</value></data>
+  <data name="AlreadyHaveAccount" xml:space="preserve"><value>Already have an account?</value></data>
+  <data name="TitleForgotPassword" xml:space="preserve"><value>Forgot Password</value></data>
+  <data name="ForgotPasswordDesc" xml:space="preserve"><value>Enter your email address and we'll send you a reset link.</value></data>
+  <data name="SendResetLink" xml:space="preserve"><value>Send Reset Link</value></data>
+  <data name="BackToSignIn" xml:space="preserve"><value>Back to Sign In</value></data>
+  <data name="TitleResetPassword" xml:space="preserve"><value>Reset Password</value></data>
+  <data name="NewPassword" xml:space="preserve"><value>New Password</value></data>
+  <data name="PasswordRequirements" xml:space="preserve"><value>At least 8 characters, one uppercase, one digit, one special character.</value></data>
+  <data name="ResetPassword" xml:space="preserve"><value>Reset Password</value></data>
+  <data name="TitleVerifyEmail" xml:space="preserve"><value>Email Verified</value></data>
+  <data name="EmailVerifiedMsg" xml:space="preserve"><value>Your email has been successfully verified.</value></data>
+  <data name="GoToHome" xml:space="preserve"><value>Go to Home</value></data>
+  <data name="VerificationFailed" xml:space="preserve"><value>Verification Failed</value></data>
+  <data name="TitleDashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="WelcomeDashboard" xml:space="preserve"><value>Welcome to your Dashboard</value></data>
+  <data name="DashboardEmptyDesc" xml:space="preserve"><value>Here you will see your platform metrics when you have activity. Start by creating your first room.</value></data>
+  <data name="CreateFirstRoom" xml:space="preserve"><value>Create First Room</value></data>
+  <data name="ActiveRooms" xml:space="preserve"><value>Active Rooms</value></data>
+  <data name="FinishedRooms" xml:space="preserve"><value>Finished Rooms</value></data>
+  <data name="ActiveParticipants" xml:space="preserve"><value>Active Participants</value></data>
+  <data name="TotalParticipants" xml:space="preserve"><value>Total Participants</value></data>
+  <data name="TotalMessages" xml:space="preserve"><value>Total Messages</value></data>
+  <data name="TotalSessions" xml:space="preserve"><value>Total Sessions</value></data>
+  <data name="RoomStatusDist" xml:space="preserve"><value>Room Status Distribution</value></data>
+  <data name="ActivityOverview" xml:space="preserve"><value>Activity Overview</value></data>
+  <data name="TitleProfile" xml:space="preserve"><value>Profile</value></data>
+  <data name="UpdateName" xml:space="preserve"><value>Update Name</value></data>
+  <data name="Update" xml:space="preserve"><value>Update</value></data>
+  <data name="ChangePassword" xml:space="preserve"><value>Change Password</value></data>
+  <data name="CurrentPassword" xml:space="preserve"><value>Current Password</value></data>
+  <data name="MemberSince" xml:space="preserve"><value>Member Since</value></data>
+  <data name="ViewSessionHistory" xml:space="preserve"><value>View Session History</value></data>
+  <data name="TitleHistory" xml:space="preserve"><value>My Session History</value></data>
+  <data name="NoSessionsYet" xml:space="preserve"><value>No sessions yet</value></data>
+  <data name="NoSessionsDesc" xml:space="preserve"><value>Your room participation history will appear here.</value></data>
+  <data name="Session" xml:space="preserve"><value>Session</value></data>
+  <data name="Joined" xml:space="preserve"><value>Joined</value></data>
+  <data name="Left" xml:space="preserve"><value>Left</value></data>
+  <data name="Duration" xml:space="preserve"><value>Duration</value></data>
+  <data name="Active" xml:space="preserve"><value>Active</value></data>
+  <data name="TitleRooms" xml:space="preserve"><value>Rooms</value></data>
+  <data name="SearchRooms" xml:space="preserve"><value>Search rooms by name...</value></data>
+  <data name="NoRoomsYet" xml:space="preserve"><value>No rooms yet</value></data>
+  <data name="NoRoomsDesc" xml:space="preserve"><value>Create a new room or join one using an access code.</value></data>
+  <data name="CreateYourFirstRoom" xml:space="preserve"><value>Create Your First Room</value></data>
+  <data name="NameHeader" xml:space="preserve"><value>Name</value></data>
+  <data name="Code" xml:space="preserve"><value>Code</value></data>
+  <data name="Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Participants" xml:space="preserve"><value>Participants</value></data>
+  <data name="Created" xml:space="preserve"><value>Created</value></data>
+  <data name="Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="Next" xml:space="preserve"><value>Next</value></data>
+  <data name="ShowingPage" xml:space="preserve"><value>Showing page {0} of {1} ({2} total)</value></data>
+  <data name="TitleCreateRoom" xml:space="preserve"><value>Create Room</value></data>
+  <data name="CreateRoomDesc" xml:space="preserve"><value>Create a new room for interviewing or pair programming. After creating it, you will receive a 6-character access code to share with participants.</value></data>
+  <data name="RoomNameLabel" xml:space="preserve"><value>Room Name</value></data>
+  <data name="RoomNamePlaceholder" xml:space="preserve"><value>E.g: Technical Interview - Frontend</value></data>
+  <data name="RoomNameHelp" xml:space="preserve"><value>Choose a descriptive name to identify the session</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Chat" xml:space="preserve"><value>Chat</value></data>
+  <data name="Editor" xml:space="preserve"><value>Editor</value></data>
+  <data name="Language" xml:space="preserve"><value>Language:</value></data>
+  <data name="MessagePlaceholder" xml:space="preserve"><value>Type a message...</value></data>
+  <data name="Send" xml:space="preserve"><value>Send</value></data>
+  <data name="Sending" xml:space="preserve"><value>Sending...</value></data>
+  <data name="FailedToSend" xml:space="preserve"><value>Failed to send message</value></data>
+  <data name="JoinedRoom" xml:space="preserve"><value>joined the room</value></data>
+  <data name="LeftRoom" xml:space="preserve"><value>left the room</value></data>
+  <data name="IsTyping" xml:space="preserve"><value>is typing</value></data>
+  <data name="Online" xml:space="preserve"><value>Online</value></data>
+  <data name="RoomName" xml:space="preserve"><value>Room Name</value></data>
+  <data name="OpenRoom" xml:space="preserve"><value>Open Room</value></data>
+  <data name="CloseRoom" xml:space="preserve"><value>Close Room</value></data>
+  <data name="CancelRoom" xml:space="preserve"><value>Cancel Room</value></data>
+  <data name="DeleteRoom" xml:space="preserve"><value>Delete Room</value></data>
+  <data name="LeaveRoom" xml:space="preserve"><value>Leave Room</value></data>
+  <data name="ConfirmCancelRoom" xml:space="preserve"><value>Cancel this room?</value></data>
+  <data name="ConfirmDeleteRoom" xml:space="preserve"><value>Delete this room permanently?</value></data>
+  <data name="RenameRoom" xml:space="preserve"><value>Rename room</value></data>
+  <data name="Save" xml:space="preserve"><value>Save</value></data>
+  <data name="VersionUpdated" xml:space="preserve"><value>Version {0} | Updated: {1}</value></data>
+  <data name="ModeLabel" xml:space="preserve"><value>Mode: {0} | Version {1}</value></data>
+  <data name="TitleJoinRoom" xml:space="preserve"><value>Join Room</value></data>
+  <data name="AccessCode" xml:space="preserve"><value>Access Code</value></data>
+  <data name="AccessCodePlaceholder" xml:space="preserve"><value>Enter 6-character code</value></data>
+  <data name="TitleAudit" xml:space="preserve"><value>Audit Log</value></data>
+  <data name="SearchAudit" xml:space="preserve"><value>Search by user, action, or details...</value></data>
+  <data name="NoAuditRecords" xml:space="preserve"><value>No audit records</value></data>
+  <data name="NoAuditDesc" xml:space="preserve"><value>Audit logs will appear here as users perform actions.</value></data>
+  <data name="User" xml:space="preserve"><value>User</value></data>
+  <data name="Action" xml:space="preserve"><value>Action</value></data>
+  <data name="Entity" xml:space="preserve"><value>Entity</value></data>
+  <data name="Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Timestamp" xml:space="preserve"><value>Timestamp</value></data>
+  <data name="ShowingPageRooms" xml:space="preserve"><value>Showing page {0} of {1} ({2} total rooms)</value></data>
+  <data name="ShowingPageAudit" xml:space="preserve"><value>Showing page {0} of {1} ({2} total records)</value></data>
+  <data name="JavaScript" xml:space="preserve"><value>JavaScript</value></data>
+  <data name="Python" xml:space="preserve"><value>Python</value></data>
+  <data name="CSharp" xml:space="preserve"><value>C#</value></data>
+  <data name="HTML" xml:space="preserve"><value>HTML</value></data>
+  <data name="CSS" xml:space="preserve"><value>CSS</value></data>
+  <data name="CancelThisRoom" xml:space="preserve"><value>Cancel this room?</value></data>
+  <data name="DeleteThisRoom" xml:space="preserve"><value>Delete this room permanently?</value></data>
+  <data name="SearchAuditLabel" xml:space="preserve"><value>Search audit logs</value></data>
+  <data name="SearchRoomsLabel" xml:space="preserve"><value>Search rooms</value></data>
+  <data name="MessageLabel" xml:space="preserve"><value>Message text</value></data>
+  <data name="RoomStatusActive" xml:space="preserve"><value>✓ Active</value></data>
+  <data name="RoomStatusFinished" xml:space="preserve"><value>◉ Finished</value></data>
+  <data name="RoomStatusCancelled" xml:space="preserve"><value>✗ Cancelled</value></data>
+  <data name="RoomStatusCreated" xml:space="preserve"><value>Created</value></data>
+  <data name="UserOnline" xml:space="preserve"><value>✓ Online</value></data>
+  <data name="UserLeft" xml:space="preserve"><value>✗ Left</value></data>
+  <data name="ParticipantListView" xml:space="preserve"><value>View</value></data>
+</root>

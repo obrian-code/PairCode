@@ -10,6 +10,7 @@ RUN dotnet restore
 
 COPY . .
 RUN dotnet publish src/Web/Web.csproj -c Release -o /app
+RUN cp -r /src/src/Web/Views /app/Views
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app

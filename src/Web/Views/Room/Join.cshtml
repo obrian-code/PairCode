@@ -1,9 +1,9 @@
 @model PairCode.Application.DTOs.JoinRoomDto
 @{
-    ViewData["Title"] = "Join Room";
+    ViewData["Title"] = T["TitleJoinRoom"];
     ViewData["Breadcrumbs"] = new[] {
-        new KeyValuePair<string, string>("Rooms", Url.Action("Index") ?? string.Empty),
-        new KeyValuePair<string, string>("Join", string.Empty)
+        new BreadcrumbItem("Rooms", Url.Action("Index")),
+        new BreadcrumbItem("Join")
     };
 }
 
@@ -11,22 +11,28 @@
 
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <h2>Join Room</h2>
+        <h2>@T["TitleJoinRoom"]</h2>
         <hr>
         <form method="post">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
-                <label asp-for="AccessCode" class="form-label">Access Code</label>
-                <input asp-for="AccessCode" class="form-control" placeholder="Enter 6-character code" maxlength="6" style="text-transform:uppercase" />
+                <label asp-for="AccessCode" class="form-label">@T["AccessCode"]</label>
+                <input asp-for="AccessCode" class="form-control" placeholder="@T["AccessCodePlaceholder"]" maxlength="6" style="text-transform:uppercase" />
                 <span asp-validation-for="AccessCode" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Join</button>
-            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+            <button type="submit" class="btn btn-primary">@T["Join"]</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">@T["Cancel"]</a>
         </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelector("form")?.addEventListener("submit", function() {
+            const input = this.querySelector("[name='AccessCode']");
+            if (input) input.value = input.value.toUpperCase();
+        });
+    </script>
 }

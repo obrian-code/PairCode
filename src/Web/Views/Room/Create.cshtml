@@ -1,9 +1,9 @@
 @model PairCode.Application.DTOs.CreateRoomDto
 @{
-    ViewData["Title"] = "Create Room";
+    ViewData["Title"] = T["TitleCreateRoom"];
     ViewData["Breadcrumbs"] = new[] {
-        new KeyValuePair<string, string>("Rooms", Url.Action("Index") ?? string.Empty),
-        new KeyValuePair<string, string>("Create", string.Empty)
+        new BreadcrumbItem("Rooms", Url.Action("Index")),
+        new BreadcrumbItem("Create")
     };
 }
 
@@ -11,18 +11,28 @@
 
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <h2>Create Room</h2>
-        <hr>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title h4">@T["TitleCreateRoom"]</h2>
+                <p class="text-muted">
+                    @T["CreateRoomDesc"]
+                </p>
+            </div>
+        </div>
+
         <form method="post">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="Enter room name" />
+                <label asp-for="Name" class="form-label">@T["RoomNameLabel"]</label>
+                <input asp-for="Name" class="form-control" placeholder="@T["RoomNamePlaceholder"]" aria-describedby="nameHelp" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+                <small id="nameHelp" class="text-muted">@T["RoomNameHelp"]</small>
             </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">@T["CreateRoom"]</button>
+                <a class="btn btn-outline-secondary" asp-action="Index">@T["Cancel"]</a>
+            </div>
         </form>
     </div>
 </div>

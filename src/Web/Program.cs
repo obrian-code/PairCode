@@ -1,6 +1,8 @@
+using System.Globalization;
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -31,13 +33,20 @@ try
         .Enrich.FromLogContext()
         .WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter()));
 
+    builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
     builder.Services.AddControllersWithViews(options =>
     {
         options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
-    });
+    })
+    .AddDataAnnotationsLocalization()
+    .AddViewLocalization()
+    .AddRazorRuntimeCompilation();
 
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    });
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -79,9 +88,13 @@ try
     builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
     builder.Services.AddScoped<ISharedDocumentRepository, SharedDocumentRepository>();
     builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+    builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
+    builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+    builder.Services.AddScoped<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddScoped<IAuditService, AuditService>();
+    builder.Services.AddScoped<IEmailService, EmailService>();
 
     builder.Services.AddScoped<UserService>();
     builder.Services.AddScoped<RoomService>();
@@ -126,6 +139,24 @@ try
 
     app.UseSerilogRequestLogging();
 
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.XContentTypeOptions = "nosniff";
+        context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+        context.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+        context.Response.Headers.ContentSecurityPolicy =
+            "default-src 'self'; " +
+            "script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline'; " +
+            "style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; " +
+            "connect-src 'self' ws://localhost:* wss://localhost:*; " +
+            "img-src 'self' data:; " +
+            "font-src 'self'; " +
+            "object-src 'none'; " +
+            "base-uri 'self'; " +
+            "form-action 'self';";
+        await next();
+    });
+
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Home/Error");
@@ -136,6 +167,14 @@ try
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
+
+    var supportedCultures = new[] { new CultureInfo("es"), new CultureInfo("en") };
+    app.UseRequestLocalization(new RequestLocalizationOptions
+    {
+        DefaultRequestCulture = new RequestCulture("es"),
+        SupportedCultures = supportedCultures,
+        SupportedUICultures = supportedCultures
+    });
 
     app.UseRouting();
 
@@ -177,10 +216,7 @@ try
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
 
-        if (env.IsDevelopment())
-            db.Database.EnsureCreated();
-        else
-            db.Database.Migrate();
+        db.Database.Migrate();
     }
 
     Log.Information("PairCode started");

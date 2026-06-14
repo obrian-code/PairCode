@@ -10,10 +10,12 @@ namespace PairCode.Web.Controllers;
 public class ProfileController : Controller
 {
     private readonly UserService _userService;
+    private readonly ParticipantService _participantService;
 
-    public ProfileController(UserService userService)
+    public ProfileController(UserService userService, ParticipantService participantService)
     {
         _userService = userService;
+        _participantService = participantService;
     }
 
     [HttpGet]
@@ -27,7 +29,7 @@ public class ProfileController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(string name)
+    public async Task<IActionResult> Update([FromForm] string name)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         await _userService.UpdateProfileAsync(userId, new(name));
@@ -53,5 +55,13 @@ public class ProfileController : Controller
         }
 
         return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> History()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var history = await _participantService.GetUserHistoryAsync(userId);
+        return View(history);
     }
 }

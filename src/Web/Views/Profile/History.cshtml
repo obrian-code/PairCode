@@ -1,0 +1,52 @@
+@model IEnumerable<PairCode.Application.DTOs.ParticipantDto>
+@{
+    ViewData["Title"] = T["TitleHistory"];
+}
+
+<h2>@T["TitleHistory"]</h2>
+<hr>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon" role="img" aria-label="Clipboard">&#x1F4CB;</div>
+        <h5>@T["NoSessionsYet"]</h5>
+        <p class="text-muted">@T["NoSessionsDesc"]</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>@T["Session"]</th>
+                    <th>@T["Joined"]</th>
+                    <th>@T["Left"]</th>
+                    <th>@T["Duration"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var session in Model)
+                {
+                    <tr>
+                        <td>@session.UserId.ToString("N")[..8]...</td>
+                        <td>@session.JoinedAt.ToString("g")</td>
+                        <td>@(session.LeftAt?.ToString("g") ?? T["Active"])</td>
+                        <td>
+                            @if (session.LeftAt.HasValue)
+                            {
+                                var duration = session.LeftAt.Value - session.JoinedAt;
+                                <span>@duration.ToString(@"hh\:mm\:ss")</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">@T["Active"]</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

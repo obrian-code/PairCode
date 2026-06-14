@@ -4,7 +4,7 @@ public record RegisterUserDto(string Name, string Email, string Password, string
 
 public record LoginDto(string Email, string Password);
 
-public record AuthResponseDto(string Token, string Name, string Email, string Role, Guid UserId);
+public record AuthResponseDto(string Token, string Name, string Email, string Role, Guid UserId, string? RefreshToken = null);
 
 public record UserProfileDto(Guid Id, string Name, string Email, string Role, DateTime CreatedAt);
 
@@ -40,8 +40,24 @@ public record DashboardDto(
 );
 
 public record AuditLogDto(Guid Id, Guid UserId, string UserName, string Action, string EntityName, string EntityId, string Details, DateTime Timestamp);
+public record ForgotPasswordDto(string Email);
+public record ResetPasswordDto(string Email, string Token, string NewPassword);
+public record RefreshTokenDto(string RefreshToken);
+public record RefreshTokenResponseDto(string Token, string RefreshToken);
 
 public record PagedResult<T>(IEnumerable<T> Items, int TotalCount, int Page, int PageSize)
 {
     public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+}
+
+public class BreadcrumbItem
+{
+    public string Label { get; }
+    public string? Url { get; }
+
+    public BreadcrumbItem(string label, string? url = null)
+    {
+        Label = label;
+        Url = url;
+    }
 }

@@ -1,5 +1,5 @@
 @{
-    var items = ViewData["Breadcrumbs"] as IEnumerable<KeyValuePair<string, string>>;
+    var items = ViewData["Breadcrumbs"] as IEnumerable<BreadcrumbItem>;
 }
 
 @if (items != null && items.Any())
@@ -8,13 +8,13 @@
         <ol class="breadcrumb small mb-3">
             @foreach (var item in items)
             {
-                if (!string.IsNullOrEmpty(item.Value))
+                if (!string.IsNullOrEmpty(item.Url))
                 {
-                    <li class="breadcrumb-item"><a href="@item.Value">@item.Key</a></li>
+                    <li class="breadcrumb-item"><a href="@item.Url">@item.Label</a></li>
                 }
                 else
                 {
-                    <li class="breadcrumb-item active" aria-current="page">@item.Key</li>
+                    <li class="breadcrumb-item active" aria-current="page">@item.Label</li>
                 }
             }
         </ol>

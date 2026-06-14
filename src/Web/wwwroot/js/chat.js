@@ -13,7 +13,9 @@ chatConnection.on("NewMessage", (message) => {
 
   const avatar = document.createElement("span");
   avatar.className = "avatar avatar-sm";
-  avatar.style.backgroundColor = getAvatarColor(message.user.userId || message.userId);
+  const bgColor = getAvatarColor(message.user.userId || message.userId);
+  avatar.style.backgroundColor = bgColor;
+  avatar.style.color = getAvatarTextColor(bgColor);
   avatar.textContent = getInitials(message.user.name);
   msgDiv.appendChild(avatar);
 
@@ -37,7 +39,7 @@ chatConnection.on("UserJoined", (userName) => {
   const messagesDiv = document.getElementById("messages");
   const el = document.createElement("div");
   el.className = "chat-system";
-  el.innerHTML = `<em>${escHtml(userName)} joined the room</em>`;
+  el.innerHTML = `<em>${escHtml(userName)} se uniò a la sala</em>`;
   messagesDiv.appendChild(el);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
@@ -46,7 +48,7 @@ chatConnection.on("UserLeft", (userName) => {
   const messagesDiv = document.getElementById("messages");
   const el = document.createElement("div");
   el.className = "chat-system";
-  el.innerHTML = `<em>${escHtml(userName)} left the room</em>`;
+  el.innerHTML = `<em>${escHtml(userName)} salió de la sala</em>`;
   messagesDiv.appendChild(el);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
@@ -55,7 +57,7 @@ chatConnection.on("UserTyping", (userName, userId) => {
   const indicator = document.getElementById("typingIndicator");
   const userSpan = document.getElementById("typingUser");
   if (indicator && userSpan) {
-    userSpan.textContent = `${escHtml(userName)} is typing`;
+    userSpan.textContent = `${escHtml(userName)} está escribiendo`;
     indicator.classList.add("visible");
   }
 });
@@ -91,10 +93,16 @@ document.getElementById("messageInput").addEventListener("input", () => {
 
 function sendMessage() {
   const input = document.getElementById("messageInput");
+  const btn = document.getElementById("sendButton");
   const message = input.value.trim();
-  if (!message) return;
+  if (!message || btn.disabled) return;
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
   chatConnection.invoke("SendMessage", roomId, message).catch(err => {
-    showToast("Failed to send message", "error");
+    showToast("Error al enviar el mensaje", "error");
+  }).finally(() => {
+    btn.disabled = false;
+    btn.textContent = "Enviar";
   });
   input.value = "";
 }
@@ -105,7 +113,7 @@ function updateParticipantStatus(name, userId, status) {
       const badge = item.querySelector(".badge");
       if (badge) {
         badge.className = `ms-auto badge bg-${status === "online" ? "success" : "secondary"}`;
-        badge.textContent = status === "online" ? "Online" : "Left";
+        badge.textContent = status === "online" ? "En línea" : "Salió";
       }
     }
   });

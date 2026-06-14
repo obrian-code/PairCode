@@ -40,7 +40,7 @@ function initCodeMirror() {
     editor.setOption("mode", mode);
     const display = document.querySelector("#editor .version-badge");
     if (display) {
-      display.textContent = `Mode: ${e.target.value} | Version ${version || 1}`;
+      display.textContent = `Modo: ${e.target.value} | Versiòn ${version || 1}`;
     }
   });
 }
@@ -74,6 +74,6 @@ editorConnection.start().then(() => {
 function updateVersionDisplay(version, updatedAt) {
   const display = document.querySelector("#editor .version-badge");
   if (display) {
-    display.textContent = `Version ${version} | Updated: ${new Date(updatedAt).toLocaleString()}`;
+    display.textContent = `Versiòn ${version} | Actualizado: ${new Date(updatedAt).toLocaleString()}`;
   }
 }

@@ -34,13 +34,7 @@ public class AuthController : Controller
         try
         {
             var response = await _userService.LoginAsync(dto);
-            Response.Cookies.Append("AuthToken", response.Token, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddHours(8)
-            });
+            SetAuthCookies(response.Token, response.RefreshToken);
             return RedirectToAction("Index", "Home");
         }
         catch (UnauthorizedAccessException)
@@ -80,13 +74,7 @@ public class AuthController : Controller
         try
         {
             var response = await _userService.RegisterAsync(dto);
-            Response.Cookies.Append("AuthToken", response.Token, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddHours(8)
-            });
+            SetAuthCookies(response.Token, response.RefreshToken);
             return RedirectToAction("Index", "Home");
         }
         catch (InvalidOperationException ex)
@@ -97,9 +85,99 @@ public class AuthController : Controller
     }
 
     [HttpPost]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _userService.LogoutAsync(userId);
+        }
+
         Response.Cookies.Delete("AuthToken");
+        Response.Cookies.Delete("RefreshToken");
         return RedirectToAction("Login");
+    }
+
+    [HttpGet]
+    public IActionResult ForgotPassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordDto dto)
+    {
+        await _userService.ForgotPasswordAsync(dto);
+        TempData["SuccessMessage"] = "If the email exists, a reset link has been sent.";
+        return RedirectToAction("Login");
+    }
+
+    [HttpGet]
+    public IActionResult ResetPassword(string email, string token)
+    {
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            return RedirectToAction("Login");
+
+        ViewBag.Email = email;
+        ViewBag.Token = token;
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordDto dto)
+    {
+        try
+        {
+            await _userService.ResetPasswordAsync(dto);
+            TempData["SuccessMessage"] = "Password reset successfully. Please sign in.";
+            return RedirectToAction("Login");
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return View(dto);
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> VerifyEmail(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+            return RedirectToAction("Login");
+
+        try
+        {
+            await _userService.VerifyEmailAsync(token);
+            ViewBag.Success = true;
+        }
+        catch (InvalidOperationException ex)
+        {
+            ViewBag.Success = false;
+            ViewBag.Error = ex.Message;
+        }
+
+        return View();
+    }
+
+    private void SetAuthCookies(string token, string? refreshToken)
+    {
+        Response.Cookies.Append("AuthToken", token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddMinutes(30)
+        });
+
+        if (refreshToken != null)
+        {
+            Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+        }
     }
 }

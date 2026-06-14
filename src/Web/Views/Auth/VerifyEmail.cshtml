@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = T["TitleVerifyEmail"];
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        @if (ViewBag.Success == true)
+        {
+            <div style="font-size: 4rem; margin-bottom: 1rem;">&#x2705;</div>
+            <h2>@T["TitleVerifyEmail"]</h2>
+            <p class="lead text-muted">@T["EmailVerifiedMsg"]</p>
+            <a class="btn btn-primary" asp-controller="Home" asp-action="Index">@T["GoToHome"]</a>
+        }
+        else
+        {
+            <div style="font-size: 4rem; margin-bottom: 1rem;">&#x274C;</div>
+            <h2>@T["VerificationFailed"]</h2>
+            <p class="lead text-muted">@ViewBag.Error</p>
+            <a class="btn btn-primary" asp-controller="Home" asp-action="Index">@T["GoToHome"]</a>
+        }
+    </div>
+</div>
