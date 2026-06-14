@@ -18,7 +18,4 @@ appsettings.Secrets.json
 ## Coverage
 coverage/
 *.coverage
-""  
-"# Project documentation (excluded from git)"  
-"COMPLETION_CHECKLIST.md"  
-"UX_UI_TASKS.md" 
+
