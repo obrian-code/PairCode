@@ -1,4 +1,4 @@
-namespace PairCode.Web.Resources;
+namespace PairCode.Web;
 
 public class SharedResources
 {

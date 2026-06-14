@@ -33,7 +33,7 @@ try
         .Enrich.FromLogContext()
         .WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter()));
 
-    builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+    builder.Services.AddLocalization();
 
     builder.Services.AddControllersWithViews(options =>
     {
