@@ -13,11 +13,14 @@ Plataforma de **pair programming** con editor de código compartido, chat en tie
 | Arquitectura | Clean Architecture (Domain, Application, Infrastructure, Web) |
 | ORM | Entity Framework Core 8 + Npgsql |
 | BD | PostgreSQL 16 |
-| Auth | JWT Bearer + BCrypt.Net |
+| Auth | JWT Bearer + BCrypt.Net + Refresh Tokens |
 | Tiempo real | SignalR |
 | Validación | FluentValidation |
 | Contenedores | Docker + Docker Compose |
 | Frontend | ASP.NET Core MVC (Razor) |
+| Localización | IStringLocalizer (español por defecto, inglés fallback) |
+| Observabilidad | OpenTelemetry + Jaeger |
+| PWA | Service Worker + Manifest |
 
 ## Estructura
 
@@ -52,16 +55,23 @@ src/
 
 ## Features
 
-- Auth con JWT + BCrypt (cookie HttpOnly)
+- Auth con JWT + BCrypt + Refresh Tokens (cookie HttpOnly)
+- Verificación de email al registrarse
 - CRUD de salas con código de acceso (6 chars)
 - Join/Leave por código
 - Ciclo de vida de sala: Created → Active → Finished / Cancelled
 - Chat en tiempo real (SignalR)
-- Editor de código compartido con versionado
-- Dashboard con métricas
+- Editor de código compartido con versionado (CodeMirror)
+- Dashboard con métricas y gráficos
+- Perfil de usuario con historial de actividad
 - Auditoría de todas las operaciones
 - Manejo global de excepciones
 - Validación con FluentValidation
+- Localización completa al español (con soporte inglés)
+- PWA: Service Worker para assets offline + manifest.json
+- Apple Touch Icon y meta tags mobile-web-app-capable
+- Breadcrumbs tipados con navegación contextual
+- OpenTelemetry + Jaeger para trazabilidad distribuida
 
 ## Quick Start
 
@@ -78,12 +88,16 @@ La app queda disponible en `http://localhost:5000`.
 
 ## Configuración
 
+### Variables de Entorno
+
 | Variable | Descripción |
 |----------|------------|
 | `ConnectionStrings__DefaultConnection` | Cadena de conexión PostgreSQL |
+| `ConnectionStrings__Redis` | Cadena de conexión Redis (opcional) |
 | `Jwt__Key` | Clave secreta JWT (min 32 caracteres) |
 | `Jwt__Issuer` | Emisor del token |
 | `Jwt__Audience` | Audiencia del token |
+| `OpenTelemetry__Endpoint` | Endpoint OTLP para Jaeger (ej: `http://jaeger:4317`) |
 
 En **producción** usar variables de entorno o Secret Manager. No committear secrets.
 
@@ -121,10 +135,12 @@ En **producción** usar variables de entorno o Secret Manager. No committear sec
 | `GET /metrics` | 8080 | Métricas Prometheus |
 | Grafana | 3000 | Dashboards (admin/admin) |
 | Prometheus | 9090 | UI de queries |
+| Jaeger | 16686 | Trazabilidad distribuida |
 
 ```bash
 docker compose up -d
 # Abrir http://localhost:3000 → dashboard "PairCode"
+# Abrir http://localhost:16686 → Jaeger UI
 ```
 
 ## Desarrollo
